@@ -1,8 +1,6 @@
 // https://adventofcode.com/2019/day/9
 
-use std::{collections::HashMap, iter::FromIterator};
-
-type Address = u64;
+type Address = u16;
 type Value = i64;
 
 fn get_digits(number: Value) -> Vec<u8> {
@@ -31,7 +29,7 @@ enum ParameterMode {
 
 #[derive(Default)]
 struct Program {
-    state: HashMap<Address, Value>,
+    state: Vec<Value>,
     ip: Address,
     relative_base: Value,
     inputs: Vec<Value>,
@@ -41,14 +39,14 @@ struct Program {
 impl Program {
     fn new(input: &str) -> Self {
         Self {
-            state: HashMap::from_iter(input.split(',').enumerate().map(|(i, x)| {
-                (
-                    i as Address,
+            state: input
+                .split(',')
+                .map(|x| {
                     x.trim()
                         .parse::<Value>()
-                        .expect(&format!("Unable to parse program value: '{}'", x)),
-                )
-            })),
+                        .expect(&format!("Unable to parse program value: '{}'", x))
+                })
+                .collect(),
             ..Default::default()
         }
     }
@@ -59,11 +57,19 @@ impl Program {
     }
 
     fn read(&mut self, position: Address) -> Value {
-        *self.state.get(&position).unwrap_or(&0)
+        let position = position as usize;
+        if position >= self.state.len() {
+            self.state.resize(position + 1, 0);
+        }
+        self.state[position]
     }
 
     fn write(&mut self, position: Address, value: Value) {
-        self.state.insert(position, value);
+        let position = position as usize;
+        if position >= self.state.len() {
+            self.state.resize(position + 1, 0);
+        }
+        self.state[position] = value;
     }
 
     fn parameter_mode(&self, id: usize, digits: &Vec<u8>) -> ParameterMode {
