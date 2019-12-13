@@ -68,7 +68,7 @@ impl Program {
         self.state[position]
     }
 
-    fn write(&mut self, position: Address, value: Value) {
+    pub fn write(&mut self, position: Address, value: Value) {
         let position = position as usize;
         if position >= self.state.len() {
             self.state.resize(position + 1, 0);
