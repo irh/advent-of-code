@@ -40,9 +40,10 @@ impl Image {
         let layer = self
             .layers
             .iter()
-            .min_by_key(|layer| layer.iter().filter(|x| **x == 0).count())
+            .min_by_key(|layer| layer.iter().filter(|&&x| x == 0).count())
             .unwrap();
-        layer.iter().filter(|x| **x == 1).count() * layer.iter().filter(|x| **x == 2).count()
+
+        layer.iter().filter(|&&x| x == 1).count() * layer.iter().filter(|&&x| x == 2).count()
     }
 
     fn iter(&self) -> ImageIter {

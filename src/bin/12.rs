@@ -204,7 +204,7 @@ fn main() {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_12 {
     use super::*;
 
     fn vec3(x: i32, y: i32, z: i32) -> Vec3 {
