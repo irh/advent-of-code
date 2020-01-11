@@ -1,5 +1,15 @@
 use std::collections::HashSet;
 
+#[derive(Clone, Copy, Default, Eq, Hash, PartialEq)]
+struct Position {
+    x: usize,
+    y: usize,
+}
+
+fn position(x: usize, y: usize) -> Position {
+    Position { x, y }
+}
+
 #[derive(Clone, Copy, PartialEq)]
 enum Object {
     Empty,
@@ -38,6 +48,7 @@ impl Vault {
                     })
                     .collect::<Vec<_>>()
             })
+            .filter(|row| !row.is_empty())
             .collect::<Vec<_>>();
 
         let entrance_y = grid
@@ -51,39 +62,43 @@ impl Vault {
 
         Self {
             grid: grid.clone(),
-            tree: Vault::make_tree_from((entrance_x, entrance_y), &grid, &mut HashSet::new()),
+            tree: Vault::make_tree_from(
+                position(entrance_x, entrance_y),
+                &grid,
+                &mut HashSet::new(),
+            ),
         }
     }
 
     fn make_tree_from(
-        pos: (usize, usize),
+        p: Position,
         grid: &Vec<Vec<Object>>,
-        visited: &mut HashSet<(usize, usize)>,
+        visited: &mut HashSet<Position>,
     ) -> VaultTree {
-        visited.insert(pos);
+        visited.insert(p);
 
         let mut children = Vec::new();
-        let mut make_child_tree = |child: (usize, usize)| {
-            if grid[child.0][child.1] != Object::Wall && !visited.contains(&child) {
+        let mut make_child_tree = |child: Position| {
+            if grid[child.y][child.x] != Object::Wall && !visited.contains(&child) {
                 children.push(Vault::make_tree_from(child, &grid, visited));
             }
         };
 
-        if pos.0 > 0 {
-            make_child_tree((pos.0 - 1, pos.1));
+        if p.x > 0 {
+            make_child_tree(position(p.x - 1, p.y));
         }
-        if pos.0 < grid.first().unwrap().len() - 1 {
-            make_child_tree((pos.0 + 1, pos.1));
+        if p.x < grid.first().unwrap().len() - 1 {
+            make_child_tree(position(p.x + 1, p.y));
         }
-        if pos.1 > 0 {
-            make_child_tree((pos.0, pos.1 - 1));
+        if p.y > 0 {
+            make_child_tree(position(p.x, p.y - 1));
         }
-        if pos.1 < grid.len() - 1 {
-            make_child_tree((pos.0, pos.1 + 1));
+        if p.y < grid.len() - 1 {
+            make_child_tree(position(p.x, p.y + 1));
         }
 
         VaultTree {
-            object: grid[pos.0][pos.1],
+            object: grid[p.y][p.x],
             children,
         }
     }
@@ -106,6 +121,7 @@ mod day_18 {
 #########
 ";
         let vault = Vault::new(input);
+        assert!(vault.tree.children.len() == 2);
     }
 
     // #[test]
