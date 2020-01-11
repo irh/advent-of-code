@@ -1,4 +1,6 @@
-#[derive(Clone, PartialEq)]
+use std::collections::HashSet;
+
+#[derive(Clone, Copy, PartialEq)]
 enum Object {
     Empty,
     Wall,
@@ -13,6 +15,7 @@ struct VaultTree {
 }
 
 struct Vault {
+    grid: Vec<Vec<Object>>,
     tree: VaultTree,
 }
 
@@ -20,7 +23,7 @@ impl Vault {
     pub fn new(input: &str) -> Self {
         use Object::*;
 
-        let objects = input
+        let grid = input
             .lines()
             .map(|l| {
                 l.trim()
@@ -35,21 +38,61 @@ impl Vault {
                     })
                     .collect::<Vec<_>>()
             })
-            .collect::<Vec<_>>()
-            .concat();
+            .collect::<Vec<_>>();
 
-        let entrance = objects.iter().position(|o| *o == Entrance);
+        let entrance_y = grid
+            .iter()
+            .position(|row| row.iter().any(|o| *o == Entrance))
+            .unwrap();
+        let entrance_x = grid[entrance_y]
+            .iter()
+            .position(|o| *o == Entrance)
+            .unwrap();
 
         Self {
-            tree: VaultTree {
-                object: Entrance,
-                children: vec![],
-            },
+            grid: grid.clone(),
+            tree: Vault::make_tree_from((entrance_x, entrance_y), &grid, &mut HashSet::new()),
+        }
+    }
+
+    fn make_tree_from(
+        pos: (usize, usize),
+        grid: &Vec<Vec<Object>>,
+        visited: &mut HashSet<(usize, usize)>,
+    ) -> VaultTree {
+        visited.insert(pos);
+
+        let mut children = Vec::new();
+        let mut make_child_tree = |child: (usize, usize)| {
+            if grid[child.0][child.1] != Object::Wall && !visited.contains(&child) {
+                children.push(Vault::make_tree_from(child, &grid, visited));
+            }
+        };
+
+        if pos.0 > 0 {
+            make_child_tree((pos.0 - 1, pos.1));
+        }
+        if pos.0 < grid.first().unwrap().len() - 1 {
+            make_child_tree((pos.0 + 1, pos.1));
+        }
+        if pos.1 > 0 {
+            make_child_tree((pos.0, pos.1 - 1));
+        }
+        if pos.1 < grid.len() - 1 {
+            make_child_tree((pos.0, pos.1 + 1));
+        }
+
+        VaultTree {
+            object: grid[pos.0][pos.1],
+            children,
         }
     }
 }
 
-fn main() {}
+fn main() {
+    let input = include_str!("input/18");
+    let _vault = Vault::new(input);
+}
 
 #[cfg(test)]
 mod day_18 {
@@ -62,6 +105,7 @@ mod day_18 {
 #b.A.@.a#
 #########
 ";
+        let vault = Vault::new(input);
     }
 
     // #[test]
