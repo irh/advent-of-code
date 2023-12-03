@@ -1,3 +1,3 @@
-# Advent of Code 2019
+# Advent of Code
 
-Solutions for [Advent of Code 2019](https://adventofcode.com/2019) written in [Rust](https://www.rust-lang.org/).
+My [Advent of Code](https://adventofcode.com) solutions.
