@@ -1,0 +1,66 @@
+# https://adventofcode.com/2023/day/2
+
+import app
+
+parse_input = |input|
+  input
+    .lines()
+    .each |line|
+      # e.g. Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+      prefix, sets = line.split ': '
+      _, id = prefix.split ' '
+      id = id.to_number()
+      sets = sets
+        .split '; '
+        .each |set|
+          set
+            .split ', '
+            .each |balls|
+              amount, color = balls.split ' '
+              color, amount.to_number()
+            .to_map()
+        .to_tuple()
+      {id, sets}
+    .to_tuple()
+
+part_one = |games|
+  games
+    .keep |game|
+      game.sets.all |set|
+        set.get('red', 0) <= 12
+          and set.get('green', 0) <= 13
+          and set.get('blue', 0) <= 14
+    .each |game| game.id
+    .sum()
+
+part_two = |games|
+  games
+    .each |game|
+      red, green, blue = 0, 0, 0
+      for set in game.sets
+        red = red.max set.get('red', 0)
+        green = green.max set.get('green', 0)
+        blue = blue.max set.get('blue', 0)
+      red * green * blue
+    .sum()
+
+@main = ||
+  app.run 2, |input|
+    games = parse_input input
+    print "Part one: ${part_one games}" # 2278
+    print "Part two: ${part_two games}" # 67953
+
+@tests =
+  @pre_test: ||
+    self.games = parse_input "\
+Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"
+
+  @test part_one: ||
+    assert_eq (part_one self.games), 8
+
+  @test part_two: ||
+    assert_eq (part_two self.games), 2286

@@ -1,0 +1,8 @@
+export run = |day, handler|
+  t = os.start_timer()
+
+  io.extend_path koto.script_dir, 'input', (string.format '{:0>2}', day)
+    >> io.read_to_string
+    >> handler
+
+  print '{:.3}s', t.elapsed()
