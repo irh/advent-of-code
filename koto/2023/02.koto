@@ -1,6 +1,6 @@
 # https://adventofcode.com/2023/day/2
 
-import app
+from '../helpers' import run_day
 
 parse_input = |input|
   input
@@ -45,7 +45,7 @@ part_two = |games|
     .sum()
 
 @main = ||
-  app.run 2, |input|
+  run_day 2, |input|
     games = parse_input input
     print "Part one: ${part_one games}" # 2278
     print "Part two: ${part_two games}" # 67953

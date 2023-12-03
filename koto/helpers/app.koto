@@ -1,0 +1,13 @@
+from koto import script_dir
+from os import start_timer
+from io import extend_path, read_to_string
+from string import format
+
+export run_day = |day, handler|
+  t = start_timer()
+
+  extend_path script_dir, 'input', (format '{:0>2}', day)
+    >> read_to_string
+    >> handler
+
+  print '{:.3}s', t.elapsed()

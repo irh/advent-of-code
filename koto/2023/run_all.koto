@@ -1,10 +1,13 @@
+from os import start_timer
+from string import format
+
 days = 2
 
-t = os.start_timer()
+t = start_timer()
 
 for day in 1..=days
   print "Day $day"
-  import "${string.format '{:0>2}', day}"
+  import "${format '{:0>2}', day}"
   print ""
 
 print "Success!"

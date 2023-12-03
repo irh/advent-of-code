@@ -1,0 +1,4 @@
+import app
+
+export
+  run_day: app.run_day
