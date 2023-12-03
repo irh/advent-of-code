@@ -31,13 +31,13 @@ fn get_digits(number: u32) -> Vec<u8> {
     digits
 }
 
-fn is_valid_password_part_one(digits: &Vec<u8>) -> bool {
+fn is_valid_password_part_one(digits: &[u8]) -> bool {
     let mut double_found = false;
     let mut x = 0;
     for d in digits.iter() {
-        match d {
-            &d if d < x => return false,
-            &d if d == x => double_found = true,
+        match *d {
+            d if d < x => return false,
+            d if d == x => double_found = true,
             _ => (),
         }
         x = *d;
@@ -45,15 +45,15 @@ fn is_valid_password_part_one(digits: &Vec<u8>) -> bool {
     double_found
 }
 
-fn is_valid_password_part_two(digits: &Vec<u8>) -> bool {
+fn is_valid_password_part_two(digits: &[u8]) -> bool {
     let mut double_found = false;
     let mut group_count = 1;
     let mut current = 0;
 
     for d in digits.iter() {
-        match d {
-            &d if d < current => return false,
-            &d if d == current => {
+        match *d {
+            d if d < current => return false,
+            d if d == current => {
                 group_count += 1;
             }
             _ => {

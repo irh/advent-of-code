@@ -94,7 +94,7 @@ impl fmt::Display for Painter {
                     _ => write!(f, "░")?,
                 };
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
         Ok(())
     }

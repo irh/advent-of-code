@@ -33,10 +33,10 @@ impl Map {
             .lines()
             .map(|line| {
                 line.chars()
-                    .filter_map(|x| match x {
-                        '.' => Some(Object::Empty),
-                        '#' => Some(Object::Asteroid),
-                        _ => panic!(format!("Unexpected location type: {}", x)),
+                    .map(|x| match x {
+                        '.' => Object::Empty,
+                        '#' => Object::Asteroid,
+                        _ => panic!("Unexpected location type: {x}"),
                     })
                     .collect()
             })
@@ -67,11 +67,7 @@ impl Map {
             }
         }
 
-        if let Some(location) = best_location {
-            Some((location, best_count))
-        } else {
-            None
-        }
+        best_location.map(|location| (location, best_count))
     }
 
     fn asteroid_directions(&self, (x, y): Location) -> HashSet<Direction> {
@@ -104,8 +100,7 @@ struct Vaporizer {
 
 impl Vaporizer {
     pub fn new(map: &Map, laser: Location) -> Self {
-        let mut directions: Vec<Direction> =
-            Vec::from_iter(map.asteroid_directions(laser).into_iter());
+        let mut directions: Vec<Direction> = Vec::from_iter(map.asteroid_directions(laser));
         // Sort the directions so that we start vertically and then rotate clockwise
         directions.sort_by_cached_key(|d| OrderedFloat(-(d.0 as f64).atan2(d.1 as f64)));
         Self {

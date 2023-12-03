@@ -44,7 +44,7 @@ impl Program {
                 .map(|x| {
                     x.trim()
                         .parse::<Value>()
-                        .expect(&format!("Unable to parse program value: '{}'", x))
+                        .unwrap_or_else(|_| panic!("Unable to parse program value: '{x}'"))
                 })
                 .collect(),
             ..Default::default()
@@ -92,9 +92,9 @@ impl Program {
     fn read_parameter(&mut self, id: usize, digits: &Vec<u8>) -> Value {
         let value = self.read(self.ip + id as Address);
         match self.parameter_mode(id, digits) {
-            ParameterMode::Position => return self.read(value as Address),
-            ParameterMode::Relative => return self.read((self.relative_base + value) as Address),
-            ParameterMode::Immediate => return value,
+            ParameterMode::Position => self.read(value as Address),
+            ParameterMode::Relative => self.read((self.relative_base + value) as Address),
+            ParameterMode::Immediate => value,
         }
     }
 

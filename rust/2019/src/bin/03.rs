@@ -73,7 +73,7 @@ fn closest_intersection_by_signal_delay(a: &Wire, b: &Wire) -> usize {
 
 fn main() {
     let input = include_str!("input/3");
-    let a = make_wire(input.lines().nth(0).unwrap());
+    let a = make_wire(input.lines().next().unwrap());
     let b = make_wire(input.lines().nth(1).unwrap());
     println!(
         "Closest intersection by manhattan distance: {}",

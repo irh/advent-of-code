@@ -170,11 +170,11 @@ impl Room {
             result.push(match (robot.direction, new_direction) {
                 (North, East) | (East, South) | (South, West) | (West, North) => Right(steps),
                 (North, West) | (West, South) | (South, East) | (East, North) => Left(steps),
-                _ => panic!(format!(
+                _ => panic!(
                     "Something went wrong while deciding where to turn \
                      - robot.direction: {:?} new_direction: {:?}",
                     robot.direction, new_direction
-                )),
+                ),
             });
 
             robot.direction = new_direction;
@@ -213,7 +213,7 @@ impl Display for Room {
                     };
                 }
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
         Ok(())
     }
@@ -335,12 +335,10 @@ fn main() {
     let mut room = Room::new();
 
     {
-        let mut program = Program::new(include_str!("input/17"));
-
         let mut x = 0;
         let mut y = 0;
 
-        while let Some(a) = program.next() {
+        for a in Program::new(include_str!("input/17")) {
             let a = a as u8 as char;
             let location = Vec2 { x, y };
             x += 1;
@@ -411,7 +409,7 @@ fn main() {
         program.set_input(&input);
 
         let mut result = 0;
-        while let Some(x) = program.next() {
+        for x in program {
             result = x;
         }
 

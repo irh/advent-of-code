@@ -36,7 +36,7 @@ impl Program {
                 .map(|x| {
                     x.trim()
                         .parse::<Value>()
-                        .expect(&format!("Unable to parse program value: '{}'", x))
+                        .unwrap_or_else(|_| panic!("Unable to parse program value: '{x}'"))
                 })
                 .collect(),
             ..Default::default()
@@ -67,8 +67,8 @@ impl Program {
             return self.state[value as usize];
         }
         match digits[digits.len() - mode_offset] {
-            0 => return self.state[value as usize],
-            1 => return value,
+            0 => self.state[value as usize],
+            1 => value,
             _ => panic!("Unexpected parameter mode"),
         }
     }
@@ -196,7 +196,7 @@ impl AmpCircuit {
                     }
                     let amp_output = amp.next();
                     previous_output = amp_output;
-                    return amp_output;
+                    amp_output
                 })
                 .collect();
 

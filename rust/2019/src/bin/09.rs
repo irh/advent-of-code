@@ -20,4 +20,3 @@ fn main() {
         println!("Distress signal coordinates {}", result[0]);
     }
 }
-

@@ -22,7 +22,7 @@ impl<'a> OrbitMap<'a> {
             let parent = orbit_objects.next().expect("Failed to parse parent object");
             let child = orbit_objects
                 .next()
-                .expect(&format!("Failed to parse child object - '{}'", orbit));
+                .unwrap_or_else(|| panic!("Failed to parse child object - '{}'", orbit));
 
             objects.entry(child).or_insert(Vec::new());
             objects.entry(parent).or_insert(Vec::new()).push(child);
@@ -40,7 +40,7 @@ impl<'a> OrbitMap<'a> {
     fn checksum_for_object(&self, object: &str, total: usize) -> usize {
         self.objects
             .get(object)
-            .expect(&format!("No object named {}", object))
+            .unwrap_or_else(|| panic!("No object named {object}"))
             .iter()
             .fold(0, |x, child| {
                 x + total + self.checksum_for_object(child, total + 1)
@@ -78,7 +78,7 @@ impl<'a> OrbitMap<'a> {
         let orbits = self
             .objects
             .get(start)
-            .expect(&format!("path_to_target - no object named {}", start));
+            .unwrap_or_else(|| panic!("path_to_target - no object named {start}"));
 
         for orbit in orbits.iter() {
             if *orbit == target {

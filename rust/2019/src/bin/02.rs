@@ -11,7 +11,7 @@ impl Program {
                 .map(|x| {
                     x.trim()
                         .parse::<Opcode>()
-                        .expect(&format!("Unable to parse opcode: '{}'", x))
+                        .unwrap_or_else(|_| panic!("Unable to parse opcode: '{x}'"))
                 })
                 .collect(),
         )
@@ -53,7 +53,7 @@ impl Program {
 
 fn main() {
     let input = include_str!("input/2");
-    let mut program = Program::new_with_noun_verb(&input, 12, 2);
+    let mut program = Program::new_with_noun_verb(input, 12, 2);
     program.run();
 
     // Part one
@@ -62,7 +62,7 @@ fn main() {
     // Part two
     for noun in 0..100 {
         for verb in 0..100 {
-            let mut program = Program::new_with_noun_verb(&input, noun, verb);
+            let mut program = Program::new_with_noun_verb(input, noun, verb);
             program.run();
             if program.0[0] == 19690720 {
                 println!(

@@ -73,9 +73,7 @@ impl Room {
     }
 
     fn move_droid(&mut self, p: Position) {
-        if !self.grid.contains_key(&p) {
-            self.grid.insert(p, GridState::Empty);
-        }
+        self.grid.entry(p).or_insert(GridState::Empty);
         self.droid = Some(p);
     }
 
@@ -183,7 +181,7 @@ impl fmt::Display for Room {
                     };
                 }
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
         Ok(())
     }

@@ -22,7 +22,7 @@ impl Image {
                     .take(width * height)
                     .map(|x| {
                         x.to_digit(10)
-                            .expect(&format!("Unexpected image data: {}", x))
+                            .unwrap_or_else(|| panic!("Unexpected image data: {x}"))
                             as u8
                     })
                     .collect(),
@@ -58,7 +58,7 @@ impl fmt::Display for Image {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for (i, pixel) in self.iter().enumerate() {
             if i > 0 && i % self.width == 0 {
-                write!(f, "\n")?;
+                writeln!(f)?;
             }
             match pixel {
                 0 => write!(f, "░")?,
@@ -66,7 +66,7 @@ impl fmt::Display for Image {
                 _ => write!(f, " ")?,
             };
         }
-        write!(f, "\n")
+        writeln!(f)
     }
 }
 

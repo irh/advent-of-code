@@ -14,7 +14,7 @@ impl<'a> Ingredient<'a> {
             quantity: quantity
                 .trim()
                 .parse::<u64>()
-                .expect(&format!("Unable to parse ingredient quantity: '{}'", input)),
+                .unwrap_or_else(|_| panic!("Unable to parse ingredient quantity: '{input}'")),
         }
     }
 }
@@ -30,8 +30,8 @@ impl<'a> ReactionMap<'a> {
             let ingredients = ingredients_result
                 .next()
                 .unwrap()
-                .split(",")
-                .map(|i| Ingredient::new(i))
+                .split(',')
+                .map(Ingredient::new)
                 .collect();
             let result = Ingredient::new(ingredients_result.next().unwrap());
             reactions.insert(result.chemical, (result.quantity, ingredients));
@@ -48,7 +48,7 @@ impl<'a> ReactionMap<'a> {
         let mut chemicals_required = HashMap::new();
         for ingredient in inputs.iter() {
             self.get_chemical_requirements(
-                &ingredient.chemical,
+                ingredient.chemical,
                 ingredient.quantity * n,
                 &mut chemicals_required,
             );
@@ -64,7 +64,7 @@ impl<'a> ReactionMap<'a> {
     ) {
         let (manufacture_quantity, ingredients) = &self.0[chemical];
 
-        let requirement = requirements.entry(&chemical).or_default();
+        let requirement = requirements.entry(chemical).or_default();
         if requirement.1 >= quantity_required {
             requirement.1 -= quantity_required;
             return;
@@ -92,7 +92,7 @@ impl<'a> ReactionMap<'a> {
         if manufactured > 0 {
             for ingredient in ingredients.iter() {
                 self.get_chemical_requirements(
-                    &ingredient.chemical,
+                    ingredient.chemical,
                     ingredient.quantity * order,
                     requirements,
                 );
@@ -114,10 +114,11 @@ fn main() {
         let mid = (min + max) / 2;
         let ore = reactions.ore_required_for_fuel(mid);
         println!("Ore required for {} fuel: {}", mid, ore);
-        if ore < 1_000_000_000_000 {
-            min = mid + 1;
-        } else if ore > 1_000_000_000_000 {
-            max = mid - 1;
+        use std::cmp::Ordering;
+        match ore.cmp(&1_000_000_000_000) {
+            Ordering::Less => min = mid + 1,
+            Ordering::Greater => max = mid - 1,
+            Ordering::Equal => {}
         }
     }
 }

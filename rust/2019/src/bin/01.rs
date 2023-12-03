@@ -9,7 +9,7 @@ fn main() {
     for line in input.lines() {
         let mass = line
             .parse::<i32>()
-            .expect(&format!("Unable to parse mass: {}", line));
+            .unwrap_or_else(|_| panic!("Unable to parse mass: {line}"));
 
         let fuel = mass / 3 - 2;
 

@@ -101,7 +101,7 @@ struct System {
 impl System {
     fn new(input: &str) -> Self {
         System {
-            moons: input.trim().lines().map(|line| Moon::new(line)).collect(),
+            moons: input.trim().lines().map(Moon::new).collect(),
         }
     }
 

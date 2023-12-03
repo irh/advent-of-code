@@ -27,7 +27,7 @@ impl Program {
                 .map(|x| {
                     x.trim()
                         .parse::<Value>()
-                        .expect(&format!("Unable to parse program value: '{}'", x))
+                        .unwrap_or_else(|_| panic!("Unable to parse program value: '{x}'"))
                 })
                 .collect(),
         )
@@ -40,8 +40,8 @@ impl Program {
             return self.0[value as usize];
         }
         match digits[digits.len() - mode_offset] {
-            0 => return self.0[value as usize],
-            1 => return value,
+            0 => self.0[value as usize],
+            1 => value,
             _ => panic!("Unexpected parameter mode"),
         }
     }
@@ -128,12 +128,12 @@ impl Program {
 fn main() {
     let input = include_str!("input/5");
 
-    let mut program = Program::new(&input);
+    let mut program = Program::new(input);
     let output = program.run(1);
     assert!(output[..output.len() - 1].iter().all(|&x| x == 0));
     println!("Diagnostic code for input 1 - {:?}", output.last());
 
-    let mut program = Program::new(&input);
+    let mut program = Program::new(input);
     let output = program.run(5);
     assert!(output[..output.len() - 1].iter().all(|&x| x == 0));
     println!("Diagnostic code for input 5 - {:?}", output.last());
