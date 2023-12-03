@@ -1,0 +1,168 @@
+# https://adventofcode.com/2020/day/11
+
+import enum.make_enum
+
+cell = make_enum "floor", "empty", "occupied"
+
+directions =
+  (-1, -1), (0, -1), (1, -1),
+  (-1,  0),          (1,  0),
+  (-1,  1), (0,  1), (1,  1),
+
+make_floor_grid = |input|
+  grid, row_count, row_size = input
+    .lines()
+    .fold ([], 0, 0), |(grid, row_count, _), line|
+      row = line
+        .chars()
+        .each |c|
+          match c
+            "." then cell.floor
+            "L" then cell.empty
+            "#" then cell.occupied
+        .to_list()
+      (grid.extend(row), row_count + 1, row.size())
+
+  return
+    grid: grid
+    temp_grid: copy grid
+
+    row_size: row_size
+    row_count: row_count
+
+    fill_seats_part_one: ||
+      grid, temp_grid = self.grid, self.temp_grid
+      row_size, row_count = self.row_size, self.row_count
+      state_changed = false
+
+      batch_start = 0
+      for y in 0..row_count
+        y_index = y * row_size
+        for x in 0..row_size
+          index = y_index + x
+          state = grid[index]
+          if state == cell.floor then continue
+
+          occupied_count = 0
+          for direction in directions
+            dx = x + direction[0]
+            if not (0 <= dx < row_size)
+              continue
+            dy = y + direction[1]
+            if not (0 <= dy < row_count)
+              continue
+            if grid[dy * row_size + dx] == cell.occupied
+              occupied_count += 1
+
+          temp_grid[index] = match state
+            cell.empty if occupied_count == 0 then
+              state_changed = true
+              cell.occupied
+            cell.occupied if occupied_count >= 4 then
+              state_changed = true
+              cell.empty
+            else state
+      grid.swap temp_grid
+      state_changed
+
+    fill_seats_part_two: ||
+      grid, temp_grid = self.grid, self.temp_grid
+      row_size, row_count = self.row_size, self.row_count
+      state_changed = false
+
+      for y in 0..row_count
+        y_index = y * row_size
+        for x in 0..row_size
+          index = y_index + x
+          state = grid[index]
+          if state == cell.floor then continue
+
+          occupied_count = 0
+          for direction in directions
+            dx, dy = x, y
+            loop
+              dx += direction[0]
+              if not 0 <= dx < row_size
+                break
+              dy += direction[1]
+              if not 0 <= dy < row_count
+                break
+              match grid[dy * row_size + dx]
+                cell.empty then break
+                cell.occupied then
+                  occupied_count += 1
+                  break
+
+          temp_grid[index] = match state
+            cell.empty if occupied_count == 0 then
+              state_changed = true
+              cell.occupied
+            cell.occupied if occupied_count >= 5 then
+              state_changed = true
+              cell.empty
+            else state
+      grid.swap temp_grid
+      state_changed
+
+    fill_seats_until_stable_part_one: ||
+      result = 0
+      while self.fill_seats_part_one()
+        result += 1
+
+    fill_seats_until_stable_part_two: ||
+      result = 0
+      while self.fill_seats_part_two()
+        result += 1
+
+    occupied_seats_count: ||
+      self.grid
+        .keep |position| position == cell.occupied
+        .count()
+
+    to_string: ||
+      result = ""
+      for y in 0..self.row_count
+        for x in 0..self.row_size
+          result += match self.grid[y * self.row_size + x]
+            cell.floor then "."
+            cell.empty then "L"
+            cell.occupied then "#"
+        result += "\n"
+
+@main = ||
+  grid = io.extend_path koto.script_dir, "input", "11"
+    >> io.read_to_string
+    >> make_floor_grid
+
+  part_one = deep_copy grid
+  print "Part one"
+  print "- seats stabilised in ${part_one.fill_seats_until_stable_part_one()} steps"
+  print "- occupied seats: ${part_one.occupied_seats_count()}" # 2261
+
+  part_two = grid
+  print "Part two"
+  print "- seats stabilised in ${part_two.fill_seats_until_stable_part_two()} steps"
+  print "- occupied seats: ${part_two.occupied_seats_count()}" # 2039
+
+@tests =
+  @pre_test: ||
+    self.grid = make_floor_grid "\
+L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL
+"
+
+  @test part_one: ||
+    assert_eq self.grid.fill_seats_until_stable_part_one(), 5
+    assert_eq self.grid.occupied_seats_count(), 37
+
+  @test part_two: ||
+    assert_eq self.grid.fill_seats_until_stable_part_two(), 6
+    assert_eq self.grid.occupied_seats_count(), 26

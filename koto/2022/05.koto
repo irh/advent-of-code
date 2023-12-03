@@ -1,0 +1,71 @@
+# https://adventofcode.com/2022/day/5
+
+import app
+
+prepare_stacks = |input|
+  stacks = []
+  lines = input.lines()
+  for line in lines
+    if line.is_empty()
+      break
+    for i, crate in line.chunks(4).enumerate()
+      if i >= stacks.size()
+        stacks.resize (i + 1), []
+      if crate.next() == ' '
+        continue
+      id = crate.next()
+      stacks[i].insert 0, id
+  stacks, lines
+
+read_result = |stacks|
+  stacks
+    .each |stack| stack.last()
+    .to_string()
+
+read_step = |step, stacks|
+  _, amount, _, source, _, target = step.split ' '
+  amount = amount.to_number()
+  source = stacks[source.to_number() - 1]
+  target = stacks[target.to_number() - 1]
+  amount, source, target
+
+part_one = |input|
+  stacks, steps = prepare_stacks input
+  for step in steps
+    amount, source, target = read_step step, stacks
+    for _ in 0..amount
+      target.push source.pop()
+  read_result stacks
+
+part_two = |input|
+  stacks, steps = prepare_stacks input
+  for step in steps
+    amount, source, target = read_step step, stacks
+    source_skip = source.size() - amount
+    target.extend source.skip source_skip
+    source.resize source_skip
+  read_result stacks
+
+@main = ||
+  app.run 5, |input|
+    print 'Part one: ${part_one input}' # SHQWSRBDL
+    print 'Part two: ${part_two input}' # CDTQZHBRS
+
+@tests =
+  @pre_test: ||
+    self.input = '    [D]
+[N] [C]
+[Z] [M] [P]
+ 1   2   3
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2'
+
+  @test part_one: ||
+    assert_eq (part_one self.input), 'CMZ'
+
+  @test part_two: ||
+    assert_eq (part_two self.input), 'MCD'
+

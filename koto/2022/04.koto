@@ -1,0 +1,56 @@
+# https://adventofcode.com/2022/day/4
+
+import app
+
+parse_range = |r|
+  min, max = r.split '-'
+  min.to_number()..=max.to_number()
+
+parse_min_max = |r|
+  min, max = r.split '-'
+  (min.to_number(), max.to_number())
+
+part_one = |input|
+  input
+    .lines()
+    .keep |line|
+      a, b = line.split ','
+      a = parse_range a
+      b = parse_range b
+      (a.contains b) or (b.contains a)
+    .count()
+
+part_two = |input|
+  input
+    .lines()
+    .keep |line|
+      a, b = line.split ','
+      a_min, a_max = parse_min_max a
+      b_min, b_max = parse_min_max b
+      a_min >= b_min and a_max <= b_max
+        or b_min >= a_min and b_max <= a_max
+        or a_min < b_min and a_max >= b_min
+        or b_min < a_min and b_max >= a_min
+    .count()
+
+@main = ||
+  app.run 4, |input|
+    print "Part one: ${part_one input}" # 528
+    print "Part two: ${part_two input}" # 881
+
+@tests =
+  @pre_test: ||
+    self.input = "\
+2-4,6-8
+2-3,4-5
+5-7,7-9
+2-8,3-7
+6-6,4-6
+2-6,4-8"
+
+  @test part_one: ||
+    assert_eq (part_one self.input), 2
+
+  @test part_two: ||
+    assert_eq (part_two self.input), 4
+

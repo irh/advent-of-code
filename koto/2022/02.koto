@@ -1,0 +1,51 @@
+# https://adventofcode.com/2022/day/2
+
+import app
+
+play_round = |them, us|
+  choice_score = match us
+    'X' then 1
+    'Y' then 2
+    'Z' then 3
+  result = match them, us
+    'A', 'Y' or 'B', 'Z' or 'C', 'X' then 6
+    'A', 'X' or 'B', 'Y' or 'C', 'Z' then 3
+    else 0
+  choice_score + result
+
+part_one = |input|
+  score = 0
+  for line in input.lines()
+    tokens = line.split ' '
+    score += play_round tokens.next(), tokens.next()
+  score
+
+part_two = |input|
+  score = 0
+  for line in input.lines()
+    tokens = line.split ' '
+    them = tokens.next()
+    us = match them, tokens.next()
+      'B', 'X' or 'A', 'Y' or 'C', 'Z' then 'X'
+      'C', 'X' or 'B', 'Y' or 'A', 'Z' then 'Y'
+      else 'Z'
+    score += play_round them, us
+  score
+
+@main = ||
+  app.run 2, |input|
+    print "Part one: ${part_one input}" # 11906
+    print "Part two: ${part_two input}" # 11186
+
+@tests =
+  @pre_test: ||
+    self.input = "\
+A Y
+B X
+C Z"
+
+  @test part_one: ||
+    assert_eq (part_one self.input), 15
+
+  @test part_two: ||
+    assert_eq (part_two self.input), 12

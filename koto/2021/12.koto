@@ -1,0 +1,143 @@
+# https://adventofcode.com/2021/day/12
+
+parse_input = |input|
+  caves = {}
+
+  add_connection = |start, end|
+    caves.update start, |cave|
+      if not cave
+        # Initialize the cave as a Map with an is_small entry
+        start_char = start.chars().next()
+        cave =
+          is_small: start_char >= 'a' and start_char <= 'z'
+      cave.update "destinations", [], |destinations|
+        destinations.push end
+      cave
+
+  for line in input.lines()
+    tokens = line.split '-'
+    start, end = tokens.next(), tokens.next()
+    add_connection start, end
+    add_connection end, start
+
+  caves
+
+get_path_count = |caves, allow_double_small_cave|
+  visit_caves = |cave_name, path, allow_double_small_cave|
+    cave = caves.get cave_name
+    if cave.is_small
+      if path.contains cave_name
+        if cave_name == "start"
+          return
+        if allow_double_small_cave
+          allow_double_small_cave = false
+        else
+          return
+    path.push cave_name
+    if cave_name == "end"
+      yield path
+    else
+      for destination in cave.destinations
+        visitor = visit_caves destination, (copy path), allow_double_small_cave
+        for finished_path in visitor
+          yield finished_path
+
+  visit_caves("start", [], allow_double_small_cave).count()
+
+@main = ||
+  t = os.start_timer()
+
+  caves = parse_input "\
+end-MY
+MY-xc
+ho-NF
+start-ho
+NF-xc
+NF-yf
+end-yf
+xc-TP
+MY-qo
+yf-TP
+dc-NF
+dc-xc
+start-dc
+yf-MY
+MY-ho
+EM-uh
+xc-yf
+ho-dc
+uh-NF
+yf-ho
+end-uh
+start-NF"
+
+  print "Part one: ${get_path_count caves, false}" # 5076
+  print "Part two: ${get_path_count caves, true}" # 145643
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  small: "\
+start-A
+start-b
+A-c
+A-b
+b-d
+A-end
+b-end"
+
+  medium: "\
+dc-end
+HN-start
+start-kj
+dc-start
+dc-HN
+LN-dc
+HN-end
+kj-sa
+kj-HN
+kj-dc"
+
+  large: "\
+fs-end
+he-DX
+fs-he
+start-DX
+pj-DX
+end-zg
+zg-sl
+zg-pj
+pj-he
+RW-he
+fs-DX
+pj-RW
+zg-RW
+start-pj
+he-WI
+zg-he
+pj-fs
+start-RW"
+
+  @test part_one_small: ||
+    caves = parse_input self.small
+    assert_eq (get_path_count caves, false), 10
+
+  @test part_one_medium: ||
+    caves = parse_input self.medium
+    assert_eq (get_path_count caves, false), 19
+
+  @test part_one_large: ||
+    caves = parse_input self.large
+    assert_eq (get_path_count caves, false), 226
+
+  @test part_two_small: ||
+    caves = parse_input self.small
+    assert_eq (get_path_count caves, true), 36
+
+  @test part_two_medium: ||
+    caves = parse_input self.medium
+    assert_eq (get_path_count caves, true), 103
+
+  @test part_two_large: ||
+    caves = parse_input self.large
+    assert_eq (get_path_count caves, true), 3509

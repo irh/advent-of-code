@@ -1,0 +1,73 @@
+# https://adventofcode.com/2021/day/2
+
+import geometry.vec2
+
+parse_input = |input|
+  input
+    .lines()
+    .each |line|
+      tokens = line.split " "
+      command = tokens.next()
+      amount = tokens.next().to_number()
+      command, amount
+    .to_tuple()
+
+follow_commands_part_one = |commands|
+  position = vec2 0, 0
+  for command, amount in commands
+    position += match command
+      "down" then
+        vec2 0, amount # Vertical direction is 'depth', so 'down' is positive
+      "up" then
+        vec2 0, -amount
+      "forward" then
+        vec2 amount, 0
+  position
+
+follow_commands_part_two = |commands|
+  position = vec2 0, 0
+  aim = 0
+  for command, amount in commands
+    match command
+      "down" then
+        aim += amount
+      "up" then
+        aim -= amount
+      "forward" then
+        position += vec2 amount, aim * amount
+  position
+
+vec2_product = |v| (v.x() * v.y()).to_int()
+
+@main = ||
+  t = os.start_timer()
+
+  commands =
+    io.extend_path koto.script_dir, "input", "02"
+      >> io.read_to_string
+      >> parse_input
+
+  part_one = (follow_commands_part_one commands) >> vec2_product
+  print "Part one: $part_one" # 2322630
+
+  part_two = (follow_commands_part_two commands) >> vec2_product
+  print "Part two: $part_two" # 2105273490
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.commands = parse_input "\
+forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2
+"
+
+  @test part_one: ||
+    assert_eq (follow_commands_part_one self.commands), (vec2 15, 10)
+
+  @test part_two: ||
+    assert_eq (follow_commands_part_two self.commands), (vec2 15, 60)

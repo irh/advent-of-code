@@ -1,0 +1,11 @@
+days = 15
+
+for day in 1..=days
+  print "Day $day"
+  if day < 10
+    import "0$day"
+  else
+    import "$day"
+  print ""
+
+print "Success!"

@@ -1,0 +1,57 @@
+# https://adventofcode.com/2021/day/1
+
+# Take each line of the input string and convert it into a number, returning a Tuple
+parse_input = |input|
+  input
+    .lines()
+    .each |n| n.to_number()
+    .to_tuple()
+
+# Counts the number of adjacent values where the second value is greater than the first
+count_increases = |data|
+  iter = data.iter()
+  previous = iter.next()
+  result = 0
+  for current in iter
+    if current > previous
+      result += 1
+    previous = current
+  result
+
+# Sums the windowed input data and counts adjacent increases in the sums
+count_windowed_increases = |data|
+  windowed_sums = data.windows(3).each |window| window.sum()
+  count_increases windowed_sums
+
+@main = ||
+  t = os.start_timer()
+
+  report =
+    io.extend_path koto.script_dir, "input", "01"
+      >> io.read_to_string
+      >> parse_input
+
+  print "Part one: ${count_increases report}" # 1754
+  print "Part two: ${count_windowed_increases report}" # 1789
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.report = parse_input "\
+199
+200
+208
+210
+200
+207
+240
+269
+260
+263"
+
+  @test part_one: ||
+    assert_eq (count_increases self.report), 7
+
+  @test part_two: ||
+    assert_eq (count_windowed_increases self.report), 5

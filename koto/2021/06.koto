@@ -1,0 +1,46 @@
+# https://adventofcode.com/2021/day/6
+
+make_simulation = |input|
+  # Parse the input string and produce a list containing the number of fish alive with
+  # matching 'days remaining'. e.g. "3,4,3,1,2"
+  fish_counts:
+    input
+      .split ","
+      .fold (list.with_size 9, 0), |result, n|
+        result[n.to_number()] += 1
+        result
+
+  # Run a simulation for a number of days
+  # - Fish in slot 0 restart their timers in slot 6, and spawn new fish in slot 8
+  # - All other fish move to the 'days remaining' slot one below their previous positions
+  # - The result is the total number of fish
+  run: |days|
+    fish_counts = copy self.fish_counts
+    for _ in 0..days
+      spawning = fish_counts.remove 0
+      fish_counts[6] += spawning
+      fish_counts.push spawning
+    fish_counts.sum()
+
+@main = ||
+  t = os.start_timer()
+
+  simulation = io.extend_path koto.script_dir, "input", "06"
+    >> io.read_to_string
+    >> string.trim
+    >> make_simulation
+
+  print "Part one: ${simulation.run 80}" # 351092
+  print "Part two: ${simulation.run 256}" # 1595330616005
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.simulation = make_simulation "3,4,3,1,2"
+
+  @test part_one: ||
+    assert_eq (self.simulation.run 80), 5934
+
+  @test part_two: ||
+    assert_eq (self.simulation.run 256), 26984457539

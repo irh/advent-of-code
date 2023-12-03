@@ -1,0 +1,32 @@
+# https://adventofcode.com/2022/day/6
+
+import app, set
+
+find_marker = |input, window_size|
+  for i, chunk in input.windows(window_size).enumerate()
+    s = chunk.to_set()
+    if s.size() == window_size
+      return i + window_size
+
+part_one = |input| find_marker input, 4
+part_two = |input| find_marker input, 14
+
+@main = ||
+  app.run 6, |input|
+    print 'Part one: ${part_one input}' # 1760
+    print 'Part two: ${part_two input}' # 2974
+
+@tests =
+  @test part_one: ||
+    assert_eq (part_one 'mjqjpqmgbljsphdztnvjfqwrcgsmlb'), 7
+    assert_eq (part_one 'bvwbjplbgvbhsrlpgdmjqwftvncz'), 5
+    assert_eq (part_one 'nppdvjthqldpwncqszvftbrmjlhg'), 6
+    assert_eq (part_one 'nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg'), 10
+    assert_eq (part_one 'zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw'), 11
+
+  @test part_two: ||
+    assert_eq (part_two 'mjqjpqmgbljsphdztnvjfqwrcgsmlb'), 19
+    assert_eq (part_two 'bvwbjplbgvbhsrlpgdmjqwftvncz'), 23
+    assert_eq (part_two 'nppdvjthqldpwncqszvftbrmjlhg'), 23
+    assert_eq (part_two 'nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg'), 29
+    assert_eq (part_two 'zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw'), 26

@@ -1,0 +1,64 @@
+# https://adventofcode.com/2020/day/6
+
+count_answers_part_one = |answers|
+  result = 0
+  answers_for_group = {}
+  for line in answers.lines()
+    if line.is_empty()
+      result += answers_for_group.size()
+      answers_for_group = {}
+    else
+      for answer in line
+        answers_for_group.insert answer
+  result + answers_for_group.size()
+
+count_answers_part_two = |answers|
+  count_for_group = |people_in_group, answers_for_group|
+    answers_for_group
+      .keep |(_, count)| count == people_in_group
+      .count()
+
+  result = 0
+  answers_for_group = {}
+  people_in_group = 0
+  for line in answers.lines()
+    if line.is_empty()
+      result += count_for_group people_in_group, answers_for_group
+      answers_for_group = {}
+      people_in_group = 0
+    else
+      people_in_group += 1
+      for answer in line
+        answers_for_group.update answer, 0, |count| count + 1
+  result + count_for_group people_in_group, answers_for_group
+
+@main = ||
+  input = io.read_to_string io.extend_path koto.script_dir, "input", "06"
+
+  print "Part one: ${count_answers_part_one input}" # 6903
+  print "Part two: ${count_answers_part_two input}" # 3493
+
+@tests =
+  @pre_test: ||
+    self.input = "\
+abc
+
+a
+b
+c
+
+ab
+ac
+
+a
+a
+a
+a
+
+b"
+
+  @test part_one: ||
+    assert_eq (count_answers_part_one self.input), 11
+
+  @test part_two: ||
+    assert_eq (count_answers_part_two self.input), 6

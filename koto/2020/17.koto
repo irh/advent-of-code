@@ -1,0 +1,91 @@
+# https://adventofcode.com/2020/day/17
+
+import set
+
+generate_local_3d = ||
+  origin = (0, 0, 0, 0)
+  for x in -1..=1
+    for y in -1..=1
+      for z in -1..=1
+        position = x, y, z, 0
+        if position != origin
+          yield position
+
+generate_local_4d = ||
+  origin = (0, 0, 0, 0)
+  for x in -1..=1
+    for y in -1..=1
+      for z in -1..=1
+        for w in -1..=1
+          position = x, y, z, w
+          if position != origin
+            yield position
+
+local_3d = generate_local_3d().to_tuple()
+local_4d = generate_local_4d().to_tuple()
+
+element_wise_sum = |a, b| a.zip(b).each(|(x, y)| x + y).to_tuple()
+
+parse_grid = |input|
+  result = input.lines().enumerate()
+    .each |(y, line)|
+      line.chars().enumerate()
+        .keep |(_, c)| c == '#'
+        .each |(x, c)| (x, y, 0, 0)
+    .flatten()
+    .to_set()
+  result
+
+cycle_grid = |grid, local_positions|
+  grid
+    .each |position|
+      local_positions
+        .each |local| element_wise_sum position, local
+    .flatten()
+    .keep |position|
+      # debug position
+      active_neighbours = local_positions
+        .keep |local|
+          shifted = element_wise_sum position, local
+          # debug grid.get shifted
+          # debug grid.contains_key shifted
+          grid.contains shifted
+        .count()
+      match active_neighbours
+        3 then true
+        2 if grid.contains(position) then true
+        else false
+    .to_set()
+
+
+cycle_grid_3d = |grid|
+  for _ in 0..6
+    grid = cycle_grid grid, local_3d
+  grid.size()
+
+cycle_grid_4d = |grid|
+  for _ in 0..6
+    grid = cycle_grid grid, local_4d
+  grid.size()
+
+@main = ||
+  grid = io.extend_path koto.script_dir, "input", "17"
+    >> io.read_to_string
+    >> parse_grid
+
+  print "Part one: ${cycle_grid_3d deep_copy grid}" # 382
+  print "Part two: ${cycle_grid_4d grid}" # 2552
+
+@tests =
+  @pre_test: ||
+    self.grid = parse_grid "\
+.#.
+..#
+###
+"
+
+  @test part_one: ||
+    assert_eq (cycle_grid_3d self.grid), 112
+
+  @test part_two: ||
+    assert_eq (cycle_grid_4d self.grid), 848

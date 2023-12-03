@@ -1,0 +1,131 @@
+# https://adventofcode.com/2021/day/15
+
+import heap.make_heap, set.make_set
+
+make_cave_map = |input|
+  grid_width = input.lines().next().chars().count()
+
+  yield_numbers = ||
+    for line in input.lines()
+      for n in line.chars()
+        yield n.to_number()
+
+  grid = yield_numbers().to_tuple()
+
+  return
+    grid: grid
+    grid_width: grid_width
+    last_row: (grid.size() / grid_width) - 1
+
+    # Yields neighbouring grid positions
+    neighbours: |i|
+      grid_width = self.grid_width
+      x = i % grid_width
+      y = (i / grid_width).floor()
+      # Up
+      if y > 0
+        up = i - grid_width
+        yield up
+      # Left
+      if x > 0
+        yield i - 1
+      # Right
+      if x < grid_width - 1
+        yield i + 1
+      # Down
+      if y < self.last_row
+        down = i + grid_width
+        yield down
+
+    # Finds the shortest path using an A*-ish algorithm
+    shortest_path_risk: ||
+      grid = self.grid
+      target = grid.size() - 1
+      open_nodes = make_heap [{position: 0, risk: 0}], |a, b| a.risk < b.risk
+      visited = make_set [0]
+      while not open_nodes.is_empty()
+        t = os.start_timer()
+        node = open_nodes.pop()
+        if node.position == target
+          return node.risk
+        node_risk = node.risk
+        for neighbour in self.neighbours node.position
+          if not visited.contains neighbour
+            neighbour_risk = node_risk + grid[neighbour]
+            visited.insert neighbour
+            open_nodes.insert {position: neighbour, risk: neighbour_risk}
+      throw "Path not found"
+
+    expand_grid: ||
+      grid = self.grid
+      grid_width = self.grid_width
+      # Repeat each row 5 times horizontally
+      iter = grid.iter()
+      expanded_x = iter
+        .chunks grid_width
+        .fold [], |result, row|
+          for i in 0..5
+            for risk in copy row
+              new_risk = (risk + i)
+              if new_risk > 9
+                new_risk -= 9
+              result.push new_risk
+          result
+      # Repeat each expanded row 5 times
+      expand_y = ||
+        for i in 0..5
+          for risk in expanded_x
+            risk += i
+            if risk > 9
+              risk -= 9
+            yield risk
+      self.grid = expand_y().to_tuple()
+      self.grid_width *= 5
+      self.last_row = (self.grid.size() / self.grid_width) - 1
+
+@main = ||
+  t = os.start_timer()
+
+  cave_map = io.extend_path koto.script_dir, "input", "15"
+    >> io.read_to_string
+    >> make_cave_map
+
+  print "Part one: ${cave_map.shortest_path_risk()}" # 498
+
+  cave_map.expand_grid()
+  print "Part two: ${cave_map.shortest_path_risk()}" # 2901
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.cave_map = make_cave_map "\
+1163751742
+1381373672
+2136511328
+3694931569
+7463417111
+1319128137
+1359912421
+3125421639
+1293138521
+2311944581"
+
+  @test part_one: ||
+    assert_eq (self.cave_map.shortest_path_risk()), 40
+
+  @test expand_grid: ||
+    cave_map = make_cave_map "8"
+    cave_map.expand_grid()
+    expected =
+      8, 9, 1, 2, 3,
+      9, 1, 2, 3, 4,
+      1, 2, 3, 4, 5,
+      2, 3, 4, 5, 6,
+      3, 4, 5, 6, 7,
+    assert_eq cave_map.grid, expected
+    assert_eq cave_map.grid_width, 5
+
+  @test part_two: ||
+    self.cave_map.expand_grid()
+    assert_eq (self.cave_map.shortest_path_risk()), 315

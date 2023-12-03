@@ -1,0 +1,99 @@
+# A simple min-heap
+#
+# compare_fn can be redefined to alter the sorting behaviour
+
+compare_and_swap = |heap, a, b|
+  data = heap.data
+  value_a = data[a]
+  value_b = data[b]
+  if heap.compare_fn value_a, value_b
+    data[a] = value_b
+    data[b] = value_a
+    true
+  else
+    false
+
+sift_down = |heap, i|
+  data = heap.data
+  child_a = i * 2 + 1
+  child = match data.get child_a
+    null then return
+    value_a then
+      child_b = child_a + 1
+      match data.get child_b
+        null then child_a
+        value_b then
+          if heap.compare_fn value_a, value_b
+            child_a
+          else
+            child_b
+  if compare_and_swap heap, child, i
+    sift_down heap, child
+
+sift_up = |heap, i|
+  if i == 0 then return
+  parent = ((i - 1) / 2).floor()
+  if compare_and_swap heap, i, parent
+    sift_up heap, parent
+
+heap_meta =
+  @type: 'Heap'
+
+  @meta insert: |value|
+    data = self.data
+    i = data.size()
+    data.push value
+    sift_up self, i
+
+  @meta pop: ||
+    data = self.data
+    result = data.first()
+    last = data.pop()
+    if not data.is_empty()
+      data[0] = last
+      sift_down self, 0
+    result
+
+  @meta is_empty: || self.data.is_empty()
+
+export make_heap = |values, compare_fn|
+  heap =
+    data: []
+    compare_fn: compare_fn or |a, b| a < b
+
+  heap = heap.with_meta_map(heap_meta)
+
+  if values
+    heap.data = values.to_list()
+    for i in (heap.data.size() - 1)..=0
+      sift_down heap, i
+
+  heap
+
+@tests =
+  @test empty_heap: ||
+    heap = make_heap()
+    assert heap.is_empty()
+    assert_eq heap.pop(), null
+    heap.insert 8
+    heap.insert 2.5
+    heap.insert 5
+    assert_eq heap.pop(), 2.5
+    assert_eq heap.pop(), 5
+    assert_eq heap.pop(), 8
+
+  @test make_heap_with_initial_data: ||
+    heap = make_heap (3, 5, 7, 9, 2, 4, 6, 1, 8)
+    heap.insert 2.5
+    assert_eq heap.pop(), 1
+    assert_eq heap.pop(), 2
+    assert_eq heap.pop(), 2.5
+    assert_eq heap.pop(), 3
+
+  @test make_heap_with_overridden_compare_fn: ||
+    heap = make_heap [3, 5, 7, 9, 2, 4, 6, 1, 8], |a, b| a > b
+    heap.insert 7.5
+    assert_eq heap.pop(), 9
+    assert_eq heap.pop(), 8
+    assert_eq heap.pop(), 7.5
+    assert_eq heap.pop(), 7

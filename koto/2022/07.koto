@@ -1,0 +1,70 @@
+# https://adventofcode.com/2022/day/7
+
+import app
+
+make_dir = ||
+  child_dirs: []
+  files: []
+
+make_fs = |input|
+  cwd = make_dir()
+  path = [cwd]
+  for line in input.lines().skip(1)
+    switch
+      line.starts_with 'dir' then null
+      line.starts_with '\$ ls' then null
+      line.starts_with '\$ cd' then
+        if line[5..] == '..'
+          path.pop()
+          cwd = path.last()
+        else
+          child_dir = make_dir()
+          cwd.child_dirs.push child_dir
+          path.push child_dir
+          cwd = child_dir
+      else # file listing
+        size = line.split(' ').next()
+        cwd.files.push size.to_number()
+  path.first()
+
+get_dir_sizes = |fs|
+  result = []
+  walk_dir = |dir|
+    size = dir.files.sum()
+    size += dir.child_dirs
+      .each |child_dir| walk_dir child_dir
+      .sum()
+    result.push size
+    size
+  walk_dir fs
+  result
+
+part_one = |fs|
+  dir_sizes = get_dir_sizes fs
+  dir_sizes.keep(|n| n < 100000).sum()
+
+part_two = |fs|
+  dir_sizes = get_dir_sizes fs
+  dir_sizes.sort()
+  available = 70000000 - dir_sizes.last()
+  space_needed = 30000000 - available
+  dir_sizes.find |n| n >= space_needed
+
+@main = ||
+  app.run 7, |input|
+    fs = make_fs input
+    print 'Part one: ${part_one fs}' # 1555642
+    print 'Part two: ${part_two fs}' # 5974547
+
+@tests =
+  @pre_test: ||
+    self.fs =
+      io.extend_path koto.script_dir, 'input', '07-test'
+        >> io.read_to_string
+        >> make_fs
+
+  @test part_one: ||
+    assert_eq (part_one self.fs), 95437
+
+  @test part_two: ||
+    assert_eq (part_two self.fs), 24933642

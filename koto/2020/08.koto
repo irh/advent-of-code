@@ -1,0 +1,85 @@
+# https://adventofcode.com/2020/day/8
+
+import enum.make_enum
+import iterator.repeat
+
+ops = make_enum "nop", "acc", "jmp"
+
+parse_program = |input|
+  input
+    .lines()
+    .each |line|
+      op = ops.get line[..3]
+      value = line[4..].to_number()
+      op, value
+    .to_tuple()
+
+run_program = |program|
+  ip = 0
+  acc = 0
+  size = program.size()
+  visited = repeat(false, size).to_list()
+  while ip < size and not visited[ip]
+    op, value = program[ip]
+    visited[ip] = true
+    match op
+      ops.nop then
+        ip += 1
+      ops.acc then
+        acc += value
+        ip += 1
+      ops.jmp then
+        ip += value
+  acc.to_int(), ip >= size
+
+fix_program_and_get_result = |program|
+  for ip in 0..program.size()
+    op, value = program[ip]
+    new_op = match op
+      ops.nop then ops.jmp
+      ops.jmp then ops.nop
+      else continue
+    fixed = program.to_list()
+    fixed[ip] = new_op, value
+    result, terminated = run_program fixed
+    if terminated
+      return result
+
+@main = ||
+  program = io.extend_path koto.script_dir, "input", "08"
+    >> io.read_to_string
+    >> parse_program
+  print "Part one: ${(run_program program)[0]}" # 1915
+  print "Part two: ${fix_program_and_get_result program}" # 944
+
+@tests =
+  @pre_test: ||
+    self.program = parse_program "\
+nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6
+"
+
+  @test parse_program: ||
+    assert_eq self.program.size(), 9
+    assert_eq self.program[0][0], ops.nop
+    assert_eq self.program[0][1], 0
+    assert_eq self.program[2][0], ops.jmp
+    assert_eq self.program[2][1], 4
+    assert_eq self.program[5][0], ops.acc
+    assert_eq self.program[5][1], -99
+
+  @test part_one: ||
+    result, terminated = run_program self.program
+    assert_eq result, 5
+    assert not terminated
+
+  @test part_two: ||
+    result = fix_program_and_get_result self.program
+    assert_eq result, 8

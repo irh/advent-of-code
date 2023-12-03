@@ -1,0 +1,121 @@
+# https://adventofcode.com/2021/day/13
+
+import set.make_set
+import geometry.vec2
+
+fold_x = |dot, n|
+  x, y = dot
+  if x < n
+    dot
+  else
+    (x - 2 * (x - n)), y
+
+fold_y = |dot, n|
+  x, y = dot
+  if y < n
+    dot
+  else
+    x, (y - 2 * (y - n))
+
+make_paper = ||
+  dots: make_set()
+
+  fold: |(along, n)|
+    dot_folder = match along
+      'x' then fold_x
+      'y' then fold_y
+    self.dots = self.dots
+      .each |dot| dot_folder dot, n
+      .to_set()
+
+  @display: ||
+    paper = self
+    display_iter = ||
+      dots = paper.dots
+      bounds_x, bounds_y = dots.fold
+        (0..0, 0..0),
+        |(bounds_x, bounds_y), dot|
+          (bounds_x.union dot[0]), (bounds_y.union dot[1])
+
+      for y in bounds_y
+        for x in bounds_x
+          if dots.contains (x, y)
+            yield '#'
+          else
+            yield '.'
+        yield '\n'
+    display_iter().to_string()
+
+parse_input = |input|
+  lines = input.lines()
+
+  paper = make_paper()
+  for line in lines
+    if line.is_empty() then break
+
+    tokens = line.split ','
+    x, y = tokens.next(), tokens.next()
+    paper.dots.insert (x.to_number(), y.to_number())
+
+  instructions = lines
+    .each |line|
+      # e.g. fold along y=7
+      tokens = line.split '='
+      direction, n = tokens.next(), tokens.next()
+      direction.chars().last(), n.to_number()
+    .to_tuple()
+
+  {paper, instructions}
+
+@main = ||
+  t = os.start_timer()
+
+  input = io.extend_path koto.script_dir, "input", "13"
+    >> io.read_to_string
+    >> parse_input
+
+  paper = input.paper
+  instructions = input.instructions.iter()
+  paper.fold instructions.next()
+
+  print "Part one: ${paper.dots.size()}" # 842
+
+  for instruction in instructions
+    paper.fold instruction
+
+  print "Part two: \n$paper"
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.input = parse_input "\
+6,10
+0,14
+9,10
+0,3
+10,4
+4,11
+6,0
+6,12
+4,1
+0,13
+10,12
+3,4
+3,0
+8,4
+1,10
+2,14
+8,10
+9,0
+
+fold along y=7
+fold along x=5"
+
+  @test example_input: ||
+    paper = self.input.paper
+    instructions = self.input.instructions.iter()
+    paper.fold instructions.next()
+    assert_eq (paper.dots.size()), 17
+    paper.fold instructions.next()
+    assert_eq (paper.dots.size()), 16

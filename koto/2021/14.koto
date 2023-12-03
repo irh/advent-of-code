@@ -1,0 +1,96 @@
+# https://adventofcode.com/2021/day/14
+
+make_polymer = |input|
+  template = input.lines().next().chars().to_tuple()
+
+  instructions = input.lines().skip(2)
+    .each |line|
+      # e.g. 'CB -> H'
+      tokens = line.split " -> "
+      tokens.next(), tokens.next()
+    .to_map()
+
+  return
+    pairs:
+      template
+        .windows 2
+        .each |pair| pair.to_string()
+        .fold {}, |result, pair|
+          result.update pair, 0, |n| n + 1
+          result
+    instructions: instructions
+    end_element: template.last()
+
+    step: ||
+      instructions = self.instructions
+      self.pairs = self.pairs
+        .fold {}, |result, (pair, count)|
+          x = instructions.get pair
+          result.update pair[0] + x, 0, |n| n + count
+          result.update x + pair[1], 0, |n| n + count
+          result
+
+    element_counts: ||
+      result = self.pairs
+        .fold {}, |result, (pair, count)|
+          result.update pair[0], 0, |n| n + count
+          result
+      result.update self.end_element, 0, |n| n + 1
+      result
+
+step_polymer = |polymer, n|
+  for i in 0..n
+    polymer.step()
+
+  min, max = polymer.element_counts().values().min_max()
+  max - min
+
+@main = ||
+  t = os.start_timer()
+
+  polymer = io.extend_path koto.script_dir, "input", "14"
+    >> io.read_to_string
+    >> make_polymer
+
+  print "Part one: ${step_polymer polymer, 10}" # 4244
+  print "Part two: ${step_polymer polymer, 30}" # 4807056953866
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.polymer= make_polymer "\
+NNCB
+
+CH -> B
+HH -> N
+CB -> H
+NH -> C
+HB -> C
+HC -> B
+HN -> C
+NN -> C
+BH -> H
+NC -> B
+NB -> B
+BN -> B
+BB -> N
+BC -> B
+CC -> N
+CN -> C"
+
+  @test step_example_input: ||
+    polymer = self.polymer
+    assert_eq polymer.pairs, {NN: 1, NC: 1, CB: 1}
+    assert_eq polymer.element_counts(), {N: 2, B: 1, C: 1}
+    polymer.step()
+    assert_eq polymer.pairs, {NC: 1, CN: 1, NB: 1, BC: 1, CH: 1, HB: 1}
+    assert_eq polymer.element_counts(), {N: 2, C: 2, B: 2, H: 1}
+    polymer.step()
+    assert_eq polymer.element_counts(), {N: 2, B: 6, C: 4, H: 1}
+
+  @test part_one: ||
+    assert_eq (step_polymer self.polymer, 10), 1588
+
+  @test part_two: ||
+    assert_eq (step_polymer self.polymer, 40), 2188189693529

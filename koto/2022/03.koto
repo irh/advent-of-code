@@ -1,0 +1,54 @@
+# https://adventofcode.com/2022/day/3
+
+import app, set
+
+item_score = |item|
+  match item.bytes().next()
+    # A..=Z have score 27..=52
+    b if (65..=90).contains b then b - 38
+    # a..=z have score 1..=26
+    b if (97..=122).contains b then b - 96
+    else throw 'invalid item'
+
+part_one = |input|
+  input
+    .lines()
+    .fold 0, |result, line|
+      size = line.size() / 2
+      items = line.chars()
+      a = items.take(size).to_set()
+      b = items.to_set()
+      for item in a
+        if b.contains item
+          return result + item_score item
+
+part_two = |input|
+  input
+    .lines()
+    .chunks(3)
+    .fold 0, |result, group|
+      a, b, c = group.each |backpack| backpack.chars().to_set()
+      for item in a
+        if (b.contains item) and (c.contains item)
+          return result + item_score item
+
+@main = ||
+  app.run 3, |input|
+    print "Part one: ${part_one input}" # 7967
+    print "Part two: ${part_two input}" # 2716
+
+@tests =
+  @pre_test: ||
+    self.input = "\
+vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw"
+
+  @test part_one: ||
+    assert_eq (part_one self.input), 157
+
+  @test part_two: ||
+    assert_eq (part_two self.input), 70

@@ -1,0 +1,52 @@
+# https://adventofcode.com/2021/day/7
+
+parse_input = |input|
+  input
+    .split ","
+    .each string.to_number
+    .to_tuple()
+    # Sort the positions so that it's easier to find the median in part one
+    .sort_copy()
+
+part_one = |positions|
+  # The target is the median position
+  target = positions[positions.size() / 2]
+  positions
+    .each |position| (position - target).abs()
+    .sum()
+
+part_two = |positions|
+  cost_to_reach_target = |target|
+    positions
+      .each |position|
+        diff = (position - target).abs()
+        diff * (diff + 1) / 2
+      .sum()
+  # The target is one of the integers next to the mean position
+  target = positions.sum() / positions.size()
+  x = cost_to_reach_target target.floor()
+  y = cost_to_reach_target target.ceil()
+  x.min(y).to_int()
+
+@main = ||
+  t = os.start_timer()
+
+  positions = io.extend_path koto.script_dir, "input", "07"
+    >> io.read_to_string
+    >> string.trim
+    >> parse_input
+
+  print "Part one: ${part_one positions}" # 336701
+  print "Part two: ${part_two positions}" # 95167302
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.positions = parse_input "16,1,2,0,4,2,7,1,2,14"
+
+  @test part_one: ||
+    assert_eq (part_one self.positions), 37
+
+  @test part_two: ||
+    assert_eq (part_two self.positions), 168

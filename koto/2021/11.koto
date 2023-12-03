@@ -1,0 +1,132 @@
+# https://adventofcode.com/2021/day/11
+
+make_grid = |input|
+  grid_width = input.lines().next().chars().count()
+
+  yield_numbers = ||
+    for line in input.lines()
+      for n in line.chars()
+        yield n.to_number()
+
+  grid = yield_numbers().to_list()
+
+  return
+    grid: grid
+    grid_width: grid_width
+    last_row: (grid.size() / grid_width) - 1
+
+    # Yields neighbouring grid positions
+    neighbours: |i|
+      grid_width = self.grid_width
+      x = i % grid_width
+      y = (i / grid_width).floor()
+      # Up
+      if y > 0
+        up = i - grid_width
+        yield up
+        # Up + Left
+        if x > 0
+          yield up - 1
+        # Up + Right
+        if x < grid_width - 1
+          yield up + 1
+      # Left
+      if x > 0
+        yield i - 1
+      # Right
+      if x < grid_width - 1
+        yield i + 1
+      # Down
+      if y < self.last_row
+        down = i + grid_width
+        yield down
+        # Down + Left
+        if x > 0
+          yield down - 1
+        # Down + Right
+        if x < grid_width - 1
+          yield down + 1
+
+    step_simulation: ||
+      grid = self.grid
+      grid_size = grid.size()
+      flash_count = 0
+      keep_going = true
+      # First, add 1 to each octopus
+      grid.transform |n| n + 1
+      # Next, find flashing octopuses and add 1 to their neighbours
+      while keep_going
+        keep_going = false
+        for i in 0..grid_size
+          if grid[i] > 9
+            # Flash!
+            for neighbour in self.neighbours i
+              # Only add 1 to the neighbour if it hasn't flashed in this iteration
+              if grid[neighbour] > 0
+                grid[neighbour] += 1
+            # Set the octopus to 0 now that it's flashed
+            grid[i] = 0
+            flash_count += 1
+            keep_going = true
+      flash_count
+
+    print_grid: ||
+      grid_width = self.grid_width
+      for i, n in self.grid.enumerate()
+        io.stdout().write(n)
+        if (i + 1) % grid_width == 0
+          print ""
+
+part_one = |grid|
+  grid = deep_copy grid
+  flash_count = 0
+  for i in 0..100
+    flash_count += grid.step_simulation()
+  flash_count
+
+part_two = |grid|
+  i = 0
+  flash_count = 0
+  grid_size = grid.grid.size()
+  until flash_count == grid_size
+    flash_count = grid.step_simulation()
+    i += 1
+  i
+
+@main = ||
+  t = os.start_timer()
+  grid = make_grid "\
+4836484555
+4663841772
+3512484556
+1481547572
+7741183422
+8683222882
+4215244233
+1544712171
+5725855786
+1717382281"
+
+  print "Part one: ${part_one grid}" # 1659
+  print "Part two: ${part_two grid}" # 127
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.grid = make_grid "\
+5483143223
+2745854711
+5264556173
+6141336146
+6357385478
+4167524645
+2176841721
+6882881134
+4846848554
+5283751526"
+
+  @test part_one: ||
+    assert_eq (part_one self.grid), 1656
+
+  @test part_two: ||
+    assert_eq (part_two self.grid), 195

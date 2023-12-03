@@ -1,0 +1,45 @@
+# https://adventofcode.com/2022/day/1
+
+import app
+
+parse_input = |input|
+  result = []
+  calories = 0
+  for line in input.lines()
+    if line.is_empty()
+      result.push calories
+      calories = 0
+    else
+      calories += line.to_number()
+  result.push calories
+  result.sort()
+
+@main = ||
+  app.run 1, |input|
+    input = parse_input input
+    print "Part one: ${input.last()}" # 66306
+    print "Part two: ${input.reversed().take(3).sum()}" # 195292
+
+@tests =
+  @pre_test: ||
+    self.input = parse_input "\
+1000
+2000
+3000
+
+4000
+
+5000
+6000
+
+7000
+8000
+9000
+
+10000"
+
+  @test part_one: ||
+    assert_eq self.input.last(), 24000
+
+  @test part_two: ||
+    assert_eq self.input.reversed().take(3).sum(), 45000

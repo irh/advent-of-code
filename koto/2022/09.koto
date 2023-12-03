@@ -1,0 +1,107 @@
+# https://adventofcode.com/2022/day/9
+
+import app
+import geometry.vec2
+import set.make_set
+
+up = vec2 0, 1
+right = vec2 1, 0
+down = vec2 0, -1
+left = vec2 -1, 0
+
+print_positions = |positions|
+  min_x, min_y, max_x, max_y = 0, 0, 0, 0
+  for p in positions
+    x, y = p
+    min_x = x.min min_x
+    max_x = x.max max_x
+    min_y = y.min min_y
+    max_y = y.max max_y
+
+  for y in max_y..=min_y
+    line = []
+    for x in min_x..=max_x
+      line.push switch
+        x == 0 and y == 0 then
+          's'
+        positions.contains vec2(x, y).to_tuple() then
+          '#'
+        else
+          '.'
+    print line.to_string()
+
+run_steps = |input, bridge_size|
+  bridge = 0..bridge_size
+    .each || vec2 0, 0
+    .to_tuple()
+  tail_positions = make_set()
+  tail_positions.insert bridge.last().to_tuple()
+
+  for step in input.lines()
+    step_dir, n = step.split ' '
+    dir = match step_dir
+      'U' then up
+      'R' then right
+      'D' then down
+      'L' then left
+    for _ in 0..n.to_number()
+      bridge.first() += dir
+      for leader, follower in bridge.windows 2
+        distance = leader - follower
+        dx, dy = distance
+        dx_abs, dy_abs = dx.abs(), dy.abs()
+
+        move_h, move_v = switch
+          dx_abs > 1 and dy_abs == 0 then
+            true, false
+          dx_abs > 1 and dy_abs > 0 then
+            true, true
+          dy_abs > 1 and dx_abs == 0 then
+            false, true
+          dy_abs > 1 and dx_abs > 0 then
+            true, true
+          else
+            false, false
+
+        if move_h
+          follower += if dx > 0 then right else left
+        if move_v
+          follower += if dy > 0 then up else down
+
+      tail_positions.insert bridge.last().to_tuple()
+  # print_positions tail_positions
+  tail_positions.size()
+
+part_one = |input| run_steps input, 2
+part_two = |input| run_steps input, 10
+
+@main = ||
+  app.run 9, |input|
+    print 'Part one: ${part_one input}' # 6243
+    print 'Part two: ${part_two input}' # 2630
+
+@tests =
+  @test part_one: ||
+    input = '\
+R 4
+U 4
+L 3
+D 1
+R 4
+D 1
+L 5
+R 2'
+    assert_eq (part_one input), 13
+    assert_eq (part_two input), 1
+
+  @test part_two: ||
+    input = '\
+R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20'
+    assert_eq (part_two input), 36

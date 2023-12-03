@@ -1,0 +1,112 @@
+# https://adventofcode.com/2022/day/8
+
+import app
+import enum.make_enum
+import set.make_set
+
+directions = make_enum 'left', 'right', 'up', 'down'
+
+parse_input = |input|
+  input
+    .lines()
+    .each |line|
+      line
+        .each |x| x.to_number()
+        .to_tuple()
+    .to_tuple()
+
+part_one = |grid|
+  trees_from_edge = |direction, i|
+    match direction
+      directions.left then
+        for x, tree in grid[i].reversed().enumerate()
+          yield tree, x
+      directions.right then
+        for x, tree in grid[i].enumerate()
+          yield tree, x
+      directions.down then
+        for y, row in grid.enumerate()
+          yield row[i], y
+      directions.up then
+        for y, row in grid.reversed().enumerate()
+          yield row[i], y
+
+  visible_trees = |direction, i|
+    tallest = -1
+    for height, j in trees_from_edge direction, i
+      if height > tallest
+        yield j
+        tallest = height
+      if height == 9
+        break
+
+  last_x = grid.first().size() - 1
+  last_y = grid.size() - 1
+  result = make_set()
+  for y in 0..=last_y
+    result.extend visible_trees(directions.right, y).each |x| x, y
+    result.extend visible_trees(directions.left, y).each |x| last_x - x, y
+  for x in 0..=last_x
+    result.extend visible_trees(directions.down, x).each |y| x, y
+    result.extend visible_trees(directions.up, x).each |y| x, last_y - y
+  result.size()
+
+part_two = |grid|
+  last_x = grid.first().size() - 1
+  last_y = grid.size() - 1
+
+  trees_from_position = |direction, x, y|
+    match direction
+      directions.left if x > 0 then
+        for x in (x - 1)..=0
+          yield grid[y][x]
+      directions.right if x < last_x then
+        for x in (x + 1)..=last_x
+          yield grid[y][x]
+      directions.up if y > 0 then
+        for y in (y - 1)..=0
+          yield grid[y][x]
+      directions.down if y < last_y then
+        for y in (y + 1)..=last_y
+          yield grid[y][x]
+
+  scenic_score = |direction, x, y|
+    count = 0
+    start_height = grid[y][x]
+    for height in trees_from_position direction, x, y
+      count += 1
+      if height >= start_height
+        break
+    count
+
+  result = 0
+  for x in 0..=last_x
+    for y in 0..=last_y
+      score = 1
+      score *= scenic_score directions.left, x, y
+      score *= scenic_score directions.right, x, y
+      score *= scenic_score directions.up, x, y
+      score *= scenic_score directions.down, x, y
+      result = result.max score
+  result
+
+@main = ||
+  app.run 8, |input|
+    grid = parse_input input
+    print 'Part one: ${part_one grid}' # 1713
+    print 'Part two: ${part_two grid}' # 268464
+
+@tests =
+  @pre_test: ||
+    self.input = parse_input '\
+30373
+25512
+65332
+33549
+35390'
+
+  @test part_one: ||
+    assert_eq (part_one self.input), 21
+
+  @test part_two: ||
+    assert_eq (part_two self.input), 8

@@ -1,0 +1,112 @@
+# https://adventofcode.com/2021/day/8
+
+import set
+
+# Parse the input lines into input and output patterns
+# e.g. acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb | cdfeb fcadb cdfeb cdbaf
+parse_entries = |input|
+  input
+    .lines()
+    .each |line|
+      parts = line.split "|"
+      patterns = {}
+      parts.next()
+        .split " "
+        .keep |s| not s.is_empty()
+        .consume |pattern|
+          pattern_chars = pattern.chars().to_set()
+          patterns.update pattern_chars.size(), [], |entry| entry.push pattern_chars
+      outputs = parts.next()
+        .split(" ")
+        .keep(|s| not s.is_empty())
+        .each |pattern| pattern.chars().to_set()
+        .to_tuple()
+      {patterns, outputs}
+    .to_tuple()
+
+part_one = |input|
+  input
+    .each |entry|
+      entry.outputs
+        .keep |output| match output.size()
+          2 or 4 or 3 or 7 then true
+          else false
+        .count()
+    .sum()
+
+# Finds the segment mapping from the sorted list of scrambled segment patterns
+find_mapping = |patterns|
+  missing_segment = |a, b|
+    a.find |key| not b.contains key
+
+  # one has 2 segments
+  one = patterns.get(2).first()
+  # seven has 3 segments
+  seven = patterns.get(3).first()
+  # four has 4 segments
+  four = patterns.get(4).first()
+  # eight has 7 segments
+  eight = patterns.get(7).first()
+
+  # three is the pattern with 5 segments that has all of one's segments
+  three = patterns.get(5).find |p| missing_segment(one, p) == null
+
+  # nine is the pattern with 6 segments that has all of four's segments
+  nine = patterns.get(6).find |p| missing_segment(four, p) == null
+  segment_e = missing_segment(eight, nine)
+
+  # two is the pattern with 5 segments that has the segment e
+  two = patterns.get(5).find |p| p.contains segment_e
+
+  # five is the pattern with 5 segments that isn't two or three
+  five = patterns.get(5).find |p| p != two and p != three
+  segment_c = missing_segment(four, five)
+
+  # six is the pattern with 6 segments that doesn't contain the segment c
+  six = patterns.get(6).find |p| not p.contains segment_c
+
+  # zero is the pattern with 6 segments that isn't six or nine
+  zero = patterns.get(6).find |p| p != six and p != nine
+
+  # Return the patterns in order
+  zero, one, two, three, four, five, six, seven, eight, nine
+
+decode_output_value = |outputs, mapping|
+  width = outputs.size() - 1
+  outputs
+    .each |output|
+      mapping.position |x| x == output
+    .enumerate()
+    .fold 0, |result, (i, n)|
+      result += n * 10.pow(width - i)
+
+part_two = |entries|
+  entries
+    .each |entry|
+      mapping = find_mapping entry.patterns
+      decode_output_value entry.outputs, mapping
+    .sum()
+
+@main = ||
+  t = os.start_timer()
+
+  input = io.extend_path koto.script_dir, "input", "08"
+    >> io.read_to_string
+    >> parse_entries
+
+  print "Part one: ${part_one input}" # 387
+  print "Part two: ${part_two input}" # 986034
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.input = io.extend_path koto.script_dir, "input", "08-example"
+      >> io.read_to_string
+      >> parse_entries
+
+  @test part_one: ||
+    assert_eq (part_one self.input), 26
+
+  @test part_two: ||
+    assert_eq (part_two self.input), 61229

@@ -1,0 +1,98 @@
+# https://adventofcode.com/2021/day/9
+
+make_map = |input|
+  map_width = input.lines().next().chars().count()
+
+  yield_numbers = ||
+    for line in input.lines()
+      for n in line.chars()
+        yield n.to_number()
+
+  data = yield_numbers().to_tuple()
+
+  return
+    data: data
+    map_width: map_width
+    last_row: (data.size() / map_width) - 1
+
+    # Yields neighbouring map positions in clockwise order starting from the top
+    neighbours: |i|
+      map_width = self.map_width
+      x = i % map_width
+      y = (i / map_width).floor()
+      if y > 0
+        yield i - map_width
+      if x < map_width - 1
+        yield i + 1
+      if y < self.last_row
+        yield i + map_width
+      if x > 0
+        yield i - 1
+
+    # Find low points in the map and sum their 'risk levels'
+    part_one: ||
+      result = 0
+      for i, height in self.data.enumerate()
+        neighbour_count = 0
+        higher_neighbour_count = 0
+        for neighbour in self.neighbours i
+          neighbour_count += 1
+          if self.data[neighbour] > height
+            higher_neighbour_count += 1
+        if higher_neighbour_count == neighbour_count
+          result += height + 1
+      result
+
+    # Find the three largest basins in the map and multiply their sizes together
+    part_two: ||
+      map = self
+      data = self.data
+      is_in_basin = list.with_size data.size(), false
+      basins = []
+      assign_to_basin = |i, basin|
+        is_in_basin[i] = true
+        basin.push i
+        for neighbour in map.neighbours i
+          if data[neighbour] < 9 and not is_in_basin[neighbour]
+            assign_to_basin neighbour, basin
+
+      for i, height in map.data.enumerate()
+        if height < 9 and not is_in_basin[i]
+          # Make a new basin and start assigning positions from the current position
+          basin = []
+          basins.push basin
+          assign_to_basin i, basin
+
+      # Sort the basins by size in descending order
+      basins.sort |basin| -basin.size()
+      # The result is the product of the sizes of the three largest basins
+      basins
+        .take(3)
+        .each(list.size)
+        .product()
+
+@main = ||
+  t = os.start_timer()
+
+  map = io.extend_path koto.script_dir, "input", "09" >> io.read_to_string
+    >> make_map
+
+  print "Part one: ${map.part_one()}" # 516
+  print "Part two: ${map.part_two()}" # 1023660
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.map = make_map "\
+2199943210
+3987894921
+9856789892
+8767896789
+9899965678"
+
+  @test part_one: ||
+    assert_eq self.map.part_one(), 15
+
+  @test part_two: ||
+    assert_eq self.map.part_two(), 1134

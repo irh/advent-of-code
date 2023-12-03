@@ -1,0 +1,73 @@
+# https://adventofcode.com/2021/day/10
+
+# Checks an input line for invalid closing chars, and if none are found then the expected
+# list of closing chars is returned. An empty list indicates a complete input line.
+check_input_line = |line|
+  close_stack = []
+  for char in line.chars()
+    match char
+      '(' then close_stack.push ')'
+      '[' then close_stack.push ']'
+      '{' then close_stack.push '}'
+      '<' then close_stack.push '>'
+      other if close_stack.pop() != other then return other
+  close_stack.reverse()
+
+# Find the 'syntax error score'
+part_one = |input|
+  input.lines().fold 0, |score, line|
+    score += match check_input_line line
+      ')' then 3
+      ']' then 57
+      '}' then 1197
+      '>' then 25137
+      else 0
+
+# Find the middle 'completion score'
+part_two = |input|
+  scores = input.lines()
+    .each |line| check_input_line line
+    .keep |result| (type result) == "List"
+    .each |result|
+      result.fold 0, |result, char|
+        result *= 5
+        result += match char
+          ')' then 1
+          ']' then 2
+          '}' then 3
+          '>' then 4
+    .to_list()
+    .sort()
+  scores[scores.size() / 2]
+
+@main = ||
+  t = os.start_timer()
+
+  input = io.extend_path koto.script_dir, "input", "10"
+    >> io.read_to_string
+
+  print "Part one: ${part_one input}" # 318081
+  print "Part two: ${part_two input}" # 4361305341
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.input = "\
+[({(<(())[]>[[{[]{<()<>>
+[(()[<>])]({[<{<<[]>>(
+{([(<{}[<>[]}>{[]{[(<()>
+(((({<>}<{<{<>}{[]{[]{}
+[[<[([]))<([[{}[[()]]]
+[{[{({}]{}}([{[{{{}}([]
+{<[[]]>}<{[{[{[]{()[[[]
+[<(<(<(<{}))><([]([]()
+<{([([[(<>()){}]>(<<{{
+<{([{{}}[<[[[<>{}]]]>[]]"
+
+  @test part_one: ||
+    assert_eq (part_one self.input), 26397
+
+  @test part_two: ||
+    assert_eq (part_two self.input), 288957
+

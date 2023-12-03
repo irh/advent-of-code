@@ -1,0 +1,114 @@
+# https://adventofcode.com/2021/day/3
+
+parse_input = |input|
+  input
+    .lines()
+    .each |line|
+      line
+        .chars()
+        .each |c| c.to_number()
+        .to_tuple()
+    .to_list()
+
+binary_digits_to_int = |digits|
+  # The last digit is the LSB so the preceding digits need to be shifted 'left'
+  # e.g. 101101
+  #           ^~~~ digits[5], LSB, no shift required
+  #      ^~~~~~~ digits[0], needs to be shifted to the left 5 times
+  end_index = digits.size() - 1
+  digits
+    .enumerate()
+    .fold 0, |result, (i, d)|
+      # Shift the binary digit into the correct position
+      shifted = d.shift_left end_index - i
+      # 'Or' the shifted digit with the result
+      result.or shifted
+
+signed_int_to_binary_digit = |count|
+  switch
+    count > 0 then 1
+    count < 0 then 0
+    else null
+
+get_power_consumption = |report|
+  report_width = report.first().size()
+
+  # Prepare a list of 'counts', where a final negative value indicates that `0` is the
+  # most common number, otherwise `1` is the most common number (we can assume that they
+  # won't be equal for now).
+  counts = list.with_size report_width, 0
+  for line in report
+    for i, n in line.enumerate()
+      match n
+        0 then counts[i] -= 1
+        1 then counts[i] += 1
+
+  # Convert the counts into binary digits, and then convert the binary digits into an int
+  gamma = counts.each(signed_int_to_binary_digit).to_tuple()
+    >> binary_digits_to_int
+
+  # The epsilon value is the gamma with its bits flipped, but we're only intrested in the
+  # N least significant bits, so first create a mask of `1`s covering those bits.
+  mask = (2.pow report_width) - 1
+  epsilon = gamma.flip_bits().and mask
+  gamma * epsilon
+
+get_most_common_digit_in_position = |report, position|
+  count = report.fold 0, |count, line|
+    match line[position]
+      0 then count - 1
+      1 then count + 1
+  signed_int_to_binary_digit count
+
+filter_report = |report, flipped|
+  # We want to filter the report down to a single entry,
+  # so make a copy to avoid modifying the original data
+  report = copy report
+  on, off = if flipped then 0, 1 else 1, 0
+  for position in 0..report.first().size()
+    bit_criteria = match get_most_common_digit_in_position report, position
+      0 then off
+      1 or null then on
+    report.retain |line| line[position] == bit_criteria
+    if report.size() == 1 then break
+  binary_digits_to_int report.first()
+
+get_life_support_rating = |report|
+  oxygen_generator_rating = filter_report report, false
+  c02_scrubber_rating = filter_report report, true
+  oxygen_generator_rating * c02_scrubber_rating
+
+@main = ||
+  t = os.start_timer()
+
+  input = io.extend_path koto.script_dir, "input", "03"
+    >> io.read_to_string
+    >> parse_input
+  print "Part one: ${get_power_consumption input}" # 4191876
+  print "Part two: ${get_life_support_rating input}" # 3414905
+
+  print "{:.3}s", t.elapsed()
+
+@tests =
+  @pre_test: ||
+    self.report = parse_input "\
+00100
+11110
+10110
+10111
+10101
+01111
+00111
+11100
+10000
+11001
+00010
+01010"
+
+  @test part_one: ||
+    result = get_power_consumption self.report
+    assert_eq result, 198
+
+  @test part_two: ||
+    result = get_life_support_rating self.report
+    assert_eq result, 230

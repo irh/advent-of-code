@@ -1,0 +1,62 @@
+# https://adventofcode.com/2020/day/3
+
+parse_input = |input|
+  input.lines()
+    .each |line|
+      line
+        .each |c| c == "#"
+        .to_tuple()
+    .to_tuple()
+
+count_trees_on_grid = |grid, (slope_x, slope_y)|
+  pos_x, pos_y = 0, 0
+  tree_count = 0
+  height = grid.size()
+  width = grid[0].size()
+  until pos_y >= height
+    if grid[pos_y][pos_x % width]
+      tree_count += 1
+    pos_x += slope_x
+    pos_y += slope_y
+  tree_count
+
+check_slopes_and_multiply_tree_counts  = |grid|
+  slopes = (1, 1), (3, 1), (5, 1), (7, 1), (1, 2)
+  slopes
+    .each |slope| count_trees_on_grid grid, slope
+    .product()
+
+@main = ||
+  input = io.extend_path koto.script_dir, "input", "03"
+    >> io.read_to_string
+    >> parse_input
+  print "Part one: ${count_trees_on_grid input, (3, 1)}" # 250
+  print "Part two: ${check_slopes_and_multiply_tree_counts input}" # 1592662500
+
+@tests =
+  @pre_test: ||
+    self.input = parse_input "\
+..##.......
+#...#...#..
+.#....#..#.
+..#.#...#.#
+.#...##..#.
+..#.##.....
+.#.#.#....#
+.#........#
+#.##...#...
+#...##....#
+.#..#...#.#
+"
+
+  @test parse_input: ||
+    assert self.input[0][2]
+    assert self.input[1][4]
+    assert not self.input[0][1]
+    assert not self.input[4][2]
+
+  @test part_one: ||
+    assert_eq (count_trees_on_grid self.input, (3, 1)), 7
+
+  @test part_two: ||
+    assert_eq (check_slopes_and_multiply_tree_counts self.input), 336
