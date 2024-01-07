@@ -1,0 +1,100 @@
+# https://adventofcode.com/2023/day/3
+
+from '../helpers' import run_day
+
+make_schematic_number = |chars|
+  n = 0
+  digit_found = false
+  start = null
+
+  while chars.peek() # TODO, assignments as while condition would play well with truthiness
+    x, c = chars.peek()
+    if not start
+      start = x
+    match c.to_number()
+      null then break
+      digit then
+        digit_found = true
+        chars.next()
+        n *= 10
+        n += digit 
+
+  return
+    @type: 'Number'
+    @display: || self.number
+
+    number: n
+    start: start
+    end: x
+
+    
+
+
+        
+
+
+
+parse_input = |input|
+  symbols = input
+    .lines()
+    .enumerate()
+    .each |(y, line)|
+      line
+        .chars()
+        .enumerate()
+        .keep |(_, c)| c != '.' and not c.to_number()
+        .each |(x, c)| (x, y), c
+    .flatten()
+    .to_map()
+
+  symbols = {}
+  numbers = {}
+
+  for y, line in input.lines().enumerate()
+    chars = line.chars().enumerate().peekable()
+    while chars.peek()
+      x, c = chars.peek()
+      pos = x, y
+      match c.to_number()
+        n then
+          number = make_schematic_number chars
+          numbers.insert pos, number
+        null if c != '.' then
+          symbols.insert pos, c
+      chars.next()
+
+
+  debug symbols
+  debug numbers # TODO, why isn't numbers displayable?
+  return
+    @type: 'Schematic'
+    symbols: symbols
+    numbers: numbers
+
+@main = ||
+  run_day 3, |input|
+    assert true
+    # games = parse_input input
+    # print "Part one: ${part_one games}" # 2278
+    # print "Part two: ${part_two games}" # 67953
+
+@tests =
+  @pre_test: ||
+    self.schematic = parse_input '
+467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...\$.*....
+.664.598..'
+
+  @test part_one: ||
+    assert false
+    assert_eq (part_one self.schematic), 8
+
+  # @test part_two: ||
+  #   assert_eq (part_two self.games), 2286
