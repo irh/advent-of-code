@@ -1,0 +1,127 @@
+# https://adventofcode.com/2023/day/3
+
+from '../helpers/app' import run_day
+from '../helpers/set' import make_set
+
+adjacent_positions = |x_range, y_range|
+  for x in x_range.expanded 1
+    for y in y_range.expanded 1
+      if not (x_range.contains x) and (y_range.contains y)
+        yield x, y
+
+part_number_meta =
+  @type: 'PartNumber'
+  @display: || '{self.number}\tx: {self.x_range},\ty: {self.y}'
+  @meta positions: ||
+    for x in self.x_range
+      yield x, self.y
+  @meta adjacent_positions: || adjacent_positions self.x_range, self.y..=self.y
+
+parse_part_number = |chars: Iterable, y: Number| -> PartNumber
+  number = 0
+  start = null
+  digits = 0
+
+  while next = chars.peek()
+    x, c = next.get()
+    if not start
+      start = x
+    match c.to_number()
+      null then break
+      digit then
+        chars.next()
+        digits += 1
+        number *= 10
+        number += digit
+
+  x_range = start..start + digits
+  {number, x_range, y}
+    .with_meta part_number_meta
+
+schematic_meta =
+  @type: 'Schematic'
+  @display: || '\nSchematic:\n  - symbols: ${self.symbols}\n  - numbers: ${self.numbers}'
+  @meta gears: ||
+    self.symbols.keep |(_, symbol)| 
+      symbol.symbol == '*' and (size symbol.parts) == 2
+
+make_schematic = |input| -> Schematic
+  input = input.trim()
+  symbols = input
+    .lines()
+    .enumerate()
+    .each |(y, line)|
+      line
+        .chars()
+        .enumerate()
+        .keep |(_, c)| c != '.' and not c.to_number()
+        .each |(x, symbol)| (x, y), {symbol, parts: []}
+    .flatten()
+    .to_map()
+
+  parts = []
+  for y, line in input.lines().enumerate()
+    chars = line.chars().enumerate().peekable()
+    while next = chars.peek()
+      x, c = next.get()
+      pos = x, y
+      if c.to_number()
+        # The character is the start of a part number, consume it and any following numbers
+        part = parse_part_number chars, y
+        symbol_found = false
+        for adjacent_position in part.adjacent_positions() 
+          if symbol = symbols.get adjacent_position
+            symbol.parts.push part
+            symbol_found = true
+        if symbol_found
+          # The part number is next to a symbol, so add it to the list
+          parts.push part
+      # Move on to the next character
+      chars.next()
+
+  {symbols, parts}
+    .with_meta schematic_meta
+
+adjacent_numbers = |pos, number_positions| -> Number
+  x, y = pos
+  adjacent_positions(x..=x, y..=y)
+    .keep |p| number_positions.contains p
+    .count()
+
+part_one = |schematic| -> Number
+  schematic
+     .parts
+     .each |part| part.number
+     .sum()
+
+part_two = |schematic| -> Number
+  schematic
+    .gears()
+    .each |(_, symbol)| symbol.parts.each(|part| part.number).product()
+    .sum()
+
+@main = ||
+  run_day 3, |input|
+    schematic = make_schematic input
+    print "Part one: {part_one schematic}" # 512794
+    print "Part two: {part_two schematic}" # ?
+
+@tests =
+  @pre_test: ||
+    self.schematic = make_schematic '
+467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..'
+
+  @test part_one: ||
+    assert_eq (part_one self.schematic), 4361
+
+  @test part_two: ||
+    assert_eq (part_two self.schematic), 467835
