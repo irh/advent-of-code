@@ -2,39 +2,39 @@
 
 from '../helpers' import run_day
 
-make_schematic_number = |chars|
+parse_schematic_number = |chars, y|
   n = 0
-  digit_found = false
   start = null
+  digits = 0
 
-  while chars.peek() # TODO, assignments as while condition would play well with truthiness
-    x, c = chars.peek()
+  while next = chars.peek()
+    x, c = next
     if not start
       start = x
     match c.to_number()
       null then break
       digit then
-        digit_found = true
         chars.next()
+        digits += 1
         n *= 10
         n += digit 
 
   return
-    @type: 'Number'
-    @display: || self.number
-
     number: n
-    start: start
-    end: x
+    x_range: start..start + digits
+    y: y
 
-    
-
-
-        
-
-
+    @type: 'Number'
+    @display: || '{}\tx: {},\ty: {}'.format self.number, self.x_range, self.y
+    @meta adjacent_positions: ||
+      for x in self.x_range.expanded 1
+        for y in (self.y - 1)..=(self.y + 1)
+          if not (y == 0 and self.x_range.contains x)
+            # debug self.number, self.x_range, self.y, (x, y)
+            yield x, y
 
 parse_input = |input|
+  input = input.trim()
   symbols = input
     .lines()
     .enumerate()
@@ -47,36 +47,49 @@ parse_input = |input|
     .flatten()
     .to_map()
 
-  symbols = {}
-  numbers = {}
+  debug symbols
+
+  numbers = []
 
   for y, line in input.lines().enumerate()
     chars = line.chars().enumerate().peekable()
-    while chars.peek()
-      x, c = chars.peek()
+    while next = chars.peek()
+      x, c = next
       pos = x, y
-      match c.to_number()
-        n then
-          number = make_schematic_number chars
-          numbers.insert pos, number
-        null if c != '.' then
-          symbols.insert pos, c
+      if n = c.to_number()
+        number = parse_schematic_number chars, y
+        numbers.push number
       chars.next()
 
-
-  debug symbols
-  debug numbers # TODO, why isn't numbers displayable?
   return
     @type: 'Schematic'
+    @display: || '\nSchematic:\n  - symbols: ${self.symbols}\n  - numbers: ${self.numbers}'
     symbols: symbols
     numbers: numbers
 
+is_part_number = |n, symbols|
+  print 'checking $n'
+  if n.number == 723
+    print n.adjacent_positions().to_tuple()
+  result = n.adjacent_positions()
+    .any |pos| symbols.contains_key pos
+  if not result
+    print 'not a part number: $n'
+  result
+
+part_one = |schematic|
+  schematic
+     .numbers
+     .keep |n| is_part_number n, schematic.symbols
+     .each |n| n.number
+     .sum()
+
 @main = ||
   run_day 3, |input|
-    assert true
-    # games = parse_input input
-    # print "Part one: ${part_one games}" # 2278
-    # print "Part two: ${part_two games}" # 67953
+    # assert false
+    schematic = parse_input input
+    debug schematic
+    print "Part one: ${part_one schematic}" # ?
 
 @tests =
   @pre_test: ||
@@ -93,8 +106,7 @@ parse_input = |input|
 .664.598..'
 
   @test part_one: ||
-    assert false
-    assert_eq (part_one self.schematic), 8
+    assert_eq (part_one self.schematic), 4361
 
   # @test part_two: ||
   #   assert_eq (part_two self.games), 2286
