@@ -1,6 +1,13 @@
 # https://adventofcode.com/2023/day/3
 
-from '../helpers' import run_day
+from '../helpers/app' import run_day
+from '../helpers/set' import make_set
+
+adjacent_positions = |x_range, y_range|
+  for x in x_range.expanded 1
+    for y in y_range.expanded 1
+      if not (x_range.contains x) and (y_range.contains y)
+        yield x, y
 
 parse_schematic_number = |chars, y|
   n = 0
@@ -17,7 +24,7 @@ parse_schematic_number = |chars, y|
         chars.next()
         digits += 1
         n *= 10
-        n += digit 
+        n += digit
 
   return
     number: n
@@ -26,12 +33,10 @@ parse_schematic_number = |chars, y|
 
     @type: 'Number'
     @display: || '{}\tx: {},\ty: {}'.format self.number, self.x_range, self.y
-    @meta adjacent_positions: ||
-      for x in self.x_range.expanded 1
-        for y in (self.y - 1)..=(self.y + 1)
-          if not (y == 0 and self.x_range.contains x)
-            # debug self.number, self.x_range, self.y, (x, y)
-            yield x, y
+    @meta positions: ||
+      for x in self.x_range
+        yield x, y
+    @meta adjacent_positions: || adjacent_positions self.x_range, self.y..=self.y
 
 parse_input = |input|
   input = input.trim()
@@ -47,9 +52,8 @@ parse_input = |input|
     .flatten()
     .to_map()
 
-  debug symbols
-
   numbers = []
+  number_positions = make_set()
 
   for y, line in input.lines().enumerate()
     chars = line.chars().enumerate().peekable()
@@ -59,6 +63,7 @@ parse_input = |input|
       if n = c.to_number()
         number = parse_schematic_number chars, y
         numbers.push number
+        number_positions.extend number.positions()
       chars.next()
 
   return
@@ -66,16 +71,16 @@ parse_input = |input|
     @display: || '\nSchematic:\n  - symbols: ${self.symbols}\n  - numbers: ${self.numbers}'
     symbols: symbols
     numbers: numbers
+    number_positions: number_positions
 
 is_part_number = |n, symbols|
-  print 'checking $n'
-  if n.number == 723
-    print n.adjacent_positions().to_tuple()
-  result = n.adjacent_positions()
-    .any |pos| symbols.contains_key pos
-  if not result
-    print 'not a part number: $n'
-  result
+  n.adjacent_positions().any |pos| symbols.contains_key pos
+
+adjacent_numbers = |pos, number_positions|
+  x, y = pos
+  adjacent_positions(x..=x, y..=y)
+    .keep |p| number_positions.contains p
+    .count()
 
 part_one = |schematic|
   schematic
@@ -84,11 +89,19 @@ part_one = |schematic|
      .each |n| n.number
      .sum()
 
+part_two = |schematic|
+  # TODO, build up a symbol -> part map
+  schematic.symbols
+    .keep |(_, symbol)| symbol == '*'
+    .keep |(pos, _)| adjacent_number_count(pos, schematic.number_positions) == 2
+    .each
+
+
 @main = ||
   run_day 3, |input|
     # assert false
     schematic = parse_input input
-    debug schematic
+    # debug schematic
     print "Part one: ${part_one schematic}" # ?
 
 @tests =
@@ -108,5 +121,5 @@ part_one = |schematic|
   @test part_one: ||
     assert_eq (part_one self.schematic), 4361
 
-  # @test part_two: ||
-  #   assert_eq (part_two self.games), 2286
+  @test part_two: ||
+    assert_eq (part_two self.schematic), 467835
