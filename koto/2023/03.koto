@@ -9,8 +9,16 @@ adjacent_positions = |x_range, y_range|
       if not (x_range.contains x) and (y_range.contains y)
         yield x, y
 
+number_meta =
+  @type: 'Number'
+  @display: || '{}\tx: {},\ty: {}'.format self.number, self.x_range, self.y
+  @meta positions: ||
+    for x in self.x_range
+      yield x, self.y
+  @meta adjacent_positions: || adjacent_positions self.x_range, self.y..=self.y
+
 parse_schematic_number = |chars, y|
-  n = 0
+  number = 0
   start = null
   digits = 0
 
@@ -23,20 +31,15 @@ parse_schematic_number = |chars, y|
       digit then
         chars.next()
         digits += 1
-        n *= 10
-        n += digit
+        number *= 10
+        number += digit
 
-  return
-    number: n
-    x_range: start..start + digits
-    y: y
+  {number, x_range: start..start + digits, y}
+    .with_meta number_meta
 
-    @type: 'Number'
-    @display: || '{}\tx: {},\ty: {}'.format self.number, self.x_range, self.y
-    @meta positions: ||
-      for x in self.x_range
-        yield x, y
-    @meta adjacent_positions: || adjacent_positions self.x_range, self.y..=self.y
+schematic_meta =
+  @type: 'Schematic'
+  @display: || '\nSchematic:\n  - symbols: ${self.symbols}\n  - numbers: ${self.numbers}'
 
 parse_input = |input|
   input = input.trim()
@@ -66,12 +69,8 @@ parse_input = |input|
         number_positions.extend number.positions()
       chars.next()
 
-  return
-    @type: 'Schematic'
-    @display: || '\nSchematic:\n  - symbols: ${self.symbols}\n  - numbers: ${self.numbers}'
-    symbols: symbols
-    numbers: numbers
-    number_positions: number_positions
+  {symbols, numbers, number_positions}
+    .with_meta schematic_meta
 
 is_part_number = |n, symbols|
   n.adjacent_positions().any |pos| symbols.contains_key pos
