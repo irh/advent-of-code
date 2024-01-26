@@ -1,6 +1,6 @@
 from os import start_timer
 
-days = 3
+days = 4
 
 t = start_timer()
 

@@ -1,0 +1,72 @@
+# https://adventofcode.com/2023/day/4
+
+from '../helpers' import run_day
+
+card_meta =
+  @type: 'Card'
+  @meta winning_number_count: ||
+    this = self
+    self
+      .mine
+      .keep |n| this.winning.contains n
+      .count()
+
+parse_numbers = |numbers: String| -> Tuple
+  numbers
+    .split ' '
+    .keep |n| not n.is_empty()
+    .each |n| n.to_number()
+    .to_tuple()
+
+make_card = |input: String| -> Card
+  # e.g.
+  # Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
+  _card_id, numbers = input.split ':'
+  winning, mine = numbers.split '|'
+  {winning: (parse_numbers winning), mine: (parse_numbers mine)}
+    .with_meta card_meta
+
+parse_cards = |input: String| -> Tuple
+  input.lines().each(|line| make_card(line)).to_tuple()
+
+part_one = |cards| -> Number
+  cards
+    .each |card|
+      winning_count = card.winning_number_count()
+      score = if winning_count == 0 then 0 else 2.pow winning_count - 1
+    .sum()
+
+part_two = |cards| -> Number
+  score = 0
+  copies = []
+  for card in cards
+    copy_count = 1 + if copies.is_empty() then 0 else copies.remove 0
+    score += copy_count
+    winning_count = card.winning_number_count()
+    if (size copies) < winning_count
+      copies.resize winning_count, 0
+    for i in 0..winning_count
+      copies[i] += copy_count
+  score
+
+@main = ||
+  run_day 4, |input|
+    cards = parse_cards input
+    print "Part one: {part_one cards}" # 28538
+    print "Part two: {part_two cards}" # 9425061
+
+@tests =
+  @pre_test: ||
+    self.cards = parse_cards "\
+Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
+Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
+Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
+Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83
+Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
+Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"
+
+  @test part_one: ||
+    assert_eq (part_one self.cards), 13
+
+  @test part_two: ||
+    assert_eq (part_two self.cards), 30
