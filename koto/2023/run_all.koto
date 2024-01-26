@@ -1,7 +1,7 @@
 from os import start_timer
 from string import format
 
-days = 3
+days = 4
 
 t = start_timer()
 

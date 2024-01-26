@@ -1,0 +1,46 @@
+# https://adventofcode.com/2023/day/1
+
+from '../helpers' import run_day
+
+get_winning_numbers = |card|
+  debug card_id, numbers = card.split ':'
+  debug winning, mine = numbers.split '|'
+  debug winning = winning
+    .split ' '
+    .keep |n| not n.is_empty()
+    .each |n| n.to_number()
+    .to_tuple()
+  for n in mine.split ' '
+    debug n = n.to_number()
+    if winning.contains n
+      print "winning! $n"
+      yield n
+
+part_one = |cards|
+  cards
+    .lines()
+    .each |card|
+      debug winning_count = get_winning_numbers(card).count()
+      debug score = if winning_count == 0 then 0 else 2.pow winning_count - 1
+    .sum()
+
+
+
+
+@main = ||
+  run_day 4, |input|
+    print "Part one: ${part_one input}" # 54081
+    # print "Part two: ${part_two input}" # 54649
+
+@tests =
+  @pre_test: ||
+    self.input = "\
+Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
+Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
+Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
+Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83
+Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
+Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"
+
+  @test part_one: ||
+    assert_eq (part_one self.input), 13
