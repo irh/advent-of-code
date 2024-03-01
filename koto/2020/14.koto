@@ -1,6 +1,6 @@
 # https://adventofcode.com/2020/day/14
 
-import enum.make_enum
+from enum import make_enum
 
 commands = make_enum "mask", "mem"
 
@@ -24,11 +24,11 @@ parse_program = |input|
   input.lines()
     .each |line|
       words = line.split " "
-      match words.next()
+      match words.next().get()
         "mask" then
           # e.g. mask = 0110xx10...
           words.next() # =
-          mask = words.next()
+          mask = words.next().get()
             .chars()
             .each |c|
               match c
@@ -42,9 +42,10 @@ parse_program = |input|
           index = mem[4..]
             .split "]"
             .next()
+            .get()
             .to_number()
           words.next() # =
-          value = words.next().to_number()
+          value = words.next().get().to_number()
           commands.mem, index, value
     .to_tuple()
 

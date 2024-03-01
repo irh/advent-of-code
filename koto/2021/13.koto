@@ -1,7 +1,7 @@
 # https://adventofcode.com/2021/day/13
 
-import set.make_set
-import geometry.vec2
+from set import make_set
+from geometry import vec2
 
 fold_x = |dot, n|
   x, y = dot
@@ -53,15 +53,13 @@ parse_input = |input|
   for line in lines
     if line.is_empty() then break
 
-    tokens = line.split ','
-    x, y = tokens.next(), tokens.next()
+    x, y = line.split ','
     paper.dots.insert (x.to_number(), y.to_number())
 
   instructions = lines
     .each |line|
       # e.g. fold along y=7
-      tokens = line.split '='
-      direction, n = tokens.next(), tokens.next()
+      direction, n = line.split '='
       direction.chars().last(), n.to_number()
     .to_tuple()
 
@@ -76,7 +74,7 @@ parse_input = |input|
 
   paper = input.paper
   instructions = input.instructions.iter()
-  paper.fold instructions.next()
+  paper.fold instructions.next().get()
 
   print "Part one: ${paper.dots.size()}" # 842
 

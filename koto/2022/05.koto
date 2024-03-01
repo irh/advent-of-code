@@ -11,9 +11,9 @@ prepare_stacks = |input|
     for i, crate in line.chunks(4).enumerate()
       if i >= stacks.size()
         stacks.resize (i + 1), []
-      if crate.next() == ' '
+      if crate.next().get() == ' '
         continue
-      id = crate.next()
+      id = crate.next().get()
       stacks[i].insert 0, id
   stacks, lines
 

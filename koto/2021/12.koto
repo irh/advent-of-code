@@ -7,7 +7,7 @@ parse_input = |input|
     caves.update start, |cave|
       if not cave
         # Initialize the cave as a Map with an is_small entry
-        start_char = start.chars().next()
+        start_char = start.chars().next().get()
         cave =
           is_small: start_char >= 'a' and start_char <= 'z'
       cave.update "destinations", [], |destinations|
@@ -15,8 +15,7 @@ parse_input = |input|
       cave
 
   for line in input.lines()
-    tokens = line.split '-'
-    start, end = tokens.next(), tokens.next()
+    start, end = line.split '-'
     add_connection start, end
     add_connection end, start
 

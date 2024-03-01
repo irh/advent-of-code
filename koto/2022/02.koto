@@ -16,16 +16,15 @@ play_round = |them, us|
 part_one = |input|
   score = 0
   for line in input.lines()
-    tokens = line.split ' '
-    score += play_round tokens.next(), tokens.next()
+    them, us = line.split ' '
+    score += play_round them, us
   score
 
 part_two = |input|
   score = 0
   for line in input.lines()
-    tokens = line.split ' '
-    them = tokens.next()
-    us = match them, tokens.next()
+    them, us = line.split ' '
+    us = match them, us
       'B', 'X' or 'A', 'Y' or 'C', 'Z' then 'X'
       'C', 'X' or 'B', 'Y' or 'A', 'Z' then 'Y'
       else 'Z'

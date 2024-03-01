@@ -10,13 +10,13 @@ parse_entries = |input|
     .each |line|
       parts = line.split "|"
       patterns = {}
-      parts.next()
+      parts.next().get()
         .split " "
         .keep |s| not s.is_empty()
         .consume |pattern|
           pattern_chars = pattern.chars().to_set()
           patterns.update pattern_chars.size(), [], |entry| entry.push pattern_chars
-      outputs = parts.next()
+      outputs = parts.next().get()
         .split(" ")
         .keep(|s| not s.is_empty())
         .each |pattern| pattern.chars().to_set()

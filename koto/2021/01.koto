@@ -9,10 +9,9 @@ parse_input = |input|
 
 # Counts the number of adjacent values where the second value is greater than the first
 count_increases = |data|
-  iter = data.iter()
-  previous = iter.next()
+  previous = data.next().get()
   result = 0
-  for current in iter
+  for current in data
     if current > previous
       result += 1
     previous = current

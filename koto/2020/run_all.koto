@@ -1,4 +1,4 @@
-import io.print
+from io import print
 
 print "Day 1"
 import "01"

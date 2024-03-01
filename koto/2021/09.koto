@@ -1,7 +1,9 @@
 # https://adventofcode.com/2021/day/9
 
+from iterator import repeat
+
 make_map = |input|
-  map_width = input.lines().next().chars().count()
+  map_width = input.lines().next().get().chars().count()
 
   yield_numbers = ||
     for line in input.lines()
@@ -47,7 +49,7 @@ make_map = |input|
     part_two: ||
       map = self
       data = self.data
-      is_in_basin = list.with_size data.size(), false
+      is_in_basin = repeat(false, data.size()).to_list()
       basins = []
       assign_to_basin = |i, basin|
         is_in_basin[i] = true

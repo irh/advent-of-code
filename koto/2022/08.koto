@@ -1,8 +1,8 @@
 # https://adventofcode.com/2022/day/8
 
 import app
-import enum.make_enum
-import set.make_set
+from enum import make_enum
+from set import make_set
 
 directions = make_enum 'left', 'right', 'up', 'down'
 

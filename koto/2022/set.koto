@@ -24,6 +24,6 @@ export make_set = |values|
   if values != null
     data.extend values
 
-  {data}.with_meta_map set_meta
+  {data}.with_meta set_meta
 
 iterator.to_set = || make_set self

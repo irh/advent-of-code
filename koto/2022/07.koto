@@ -23,7 +23,7 @@ make_fs = |input|
           path.push child_dir
           cwd = child_dir
       else # file listing
-        size = line.split(' ').next()
+        size = line.split(' ').next().get()
         cwd.files.push size.to_number()
   path.first()
 

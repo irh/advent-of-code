@@ -1,9 +1,10 @@
 # https://adventofcode.com/2021/day/15
 
-import heap.make_heap, set.make_set
+from heap import make_heap
+from set import make_set
 
 make_cave_map = |input|
-  grid_width = input.lines().next().chars().count()
+  grid_width = input.lines().next().get().chars().count()
 
   yield_numbers = ||
     for line in input.lines()

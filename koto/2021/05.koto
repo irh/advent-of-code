@@ -1,6 +1,6 @@
 # https://adventofcode.com/2021/day/5
 
-import geometry.vec2
+from geometry import vec2
 
 make_vent_line = |x0, y0, x1, y1|
   start: vec2 x0, y0
@@ -48,12 +48,12 @@ parse_input = |input|
     .each |line|
       # e.g. 427,503 -> 809,885
       tokens = line.split ","
-      x0 = tokens.next().to_number()
-      mid_section = tokens.next().split " "
-      y0 = mid_section.next().to_number()
+      x0 = tokens.next().get().to_number()
+      mid_section = tokens.next().get().split " "
+      y0 = mid_section.next().get().to_number()
       mid_section.next() # ->
-      x1 = mid_section.next().to_number()
-      y1 = tokens.next().to_number()
+      x1 = mid_section.next().get().to_number()
+      y1 = tokens.next().get().to_number()
       make_vent_line x0, y0, x1, y1
     .to_tuple()
 

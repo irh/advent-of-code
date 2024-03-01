@@ -3,7 +3,7 @@
 import app, set
 
 item_score = |item|
-  match item.bytes().next()
+  match item.bytes().next().get()
     # A..=Z have score 27..=52
     b if (65..=90).contains b then b - 38
     # a..=z have score 1..=26

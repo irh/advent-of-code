@@ -36,7 +36,7 @@ get_power_consumption = |report|
   # Prepare a list of 'counts', where a final negative value indicates that `0` is the
   # most common number, otherwise `1` is the most common number (we can assume that they
   # won't be equal for now).
-  counts = list.with_size report_width, 0
+  counts = iterator.repeat(0, report_width).to_list()
   for line in report
     for i, n in line.enumerate()
       match n

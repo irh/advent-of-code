@@ -19,21 +19,21 @@ make_tile = |tile_id, grid|
       yield edge_id (copy edge)
       yield edge_id edge.reversed()
 
-    ids = edge_ids self.grid.first()
-    yield ids.next()
-    yield ids.next()
+    a, b = edge_ids self.grid.first()
+    yield a
+    yield b
 
-    ids = edge_ids self.grid.last()
-    yield ids.next()
-    yield ids.next()
+    a, b = edge_ids self.grid.last()
+    yield a
+    yield b
 
-    ids = edge_ids self.grid.each |row| row.first()
-    yield ids.next()
-    yield ids.next()
+    a, b = edge_ids self.grid.each |row| row.first()
+    yield a
+    yield b
 
-    ids = edge_ids self.grid.each |row| row.last()
-    yield ids.next()
-    yield ids.next()
+    a, b = edge_ids self.grid.each |row| row.last()
+    yield a
+    yield b
 
   @display: ||
     row_to_string = |row|
@@ -73,7 +73,7 @@ parse_input = |input|
   lines = input.lines()
 
   loop
-    line = lines.next()
+    line = lines.next().get()
 
     # Tile xxxx:
     tile_id = line[5..9].to_number()
@@ -92,8 +92,8 @@ parse_input = |input|
 
     match lines.next()
       null then break tiles
-      "" then continue
-      other then throw "Expected empty line, got '{}'".format other
+      output if output.get().is_empty() then continue
+      output then throw "Expected empty line, got '{}'".format output.get()
 
 @main = ||
   tiles = io.extend_path koto.script_dir, "input", "20"

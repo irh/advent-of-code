@@ -8,7 +8,7 @@ parse_input = |input|
     id, rest = line.split(":").to_tuple()
     id = id.to_number()
     rest = rest.trim()
-    first_char = rest.chars().next()
+    first_char = rest.chars().next().get()
     match first_char
       '"' then
         char = rest[1..(rest.size() - 1)]
@@ -56,7 +56,7 @@ message_checker = |rules|
       else throw "Unsupported rule"
 
   match_char: |char, message, rule_ids|
-    match message.chars().next()
+    match message.chars().next().get()
       c if c == char then
         remaining_message = message[1..]
         self.match_rules remaining_message, rule_ids

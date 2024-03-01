@@ -61,7 +61,7 @@ export make_heap = |values, compare_fn|
     data: []
     compare_fn: compare_fn or |a, b| a < b
 
-  heap = heap.with_meta_map(heap_meta)
+  heap = heap.with_meta heap_meta
 
   if values
     heap.data = values.to_list()

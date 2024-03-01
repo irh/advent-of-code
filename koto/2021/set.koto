@@ -20,6 +20,6 @@ export make_set = |values|
     for value in values
       data.insert value
 
-  {data}.with_meta_map set_meta
+  {data}.with_meta set_meta
 
 iterator.to_set = || make_set self

@@ -1,15 +1,13 @@
 # https://adventofcode.com/2021/day/2
 
-import geometry.vec2
+from geometry import vec2
 
 parse_input = |input|
   input
     .lines()
     .each |line|
-      tokens = line.split " "
-      command = tokens.next()
-      amount = tokens.next().to_number()
-      command, amount
+      command, amount = line.split ' '
+      command, amount.to_number()
     .to_tuple()
 
 follow_commands_part_one = |commands|

@@ -1,8 +1,8 @@
 # https://adventofcode.com/2022/day/9
 
 import app
-import geometry.vec2
-import set.make_set
+from geometry import vec2
+from set import make_set
 
 up = vec2 0, 1
 right = vec2 1, 0

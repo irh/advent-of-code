@@ -1,7 +1,7 @@
 # https://adventofcode.com/2021/day/11
 
 make_grid = |input|
-  grid_width = input.lines().next().chars().count()
+  grid_width = input.lines().next().get().chars().count()
 
   yield_numbers = ||
     for line in input.lines()

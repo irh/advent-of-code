@@ -7,15 +7,15 @@ parse_password = |line|
   # 1-3 a: abcde
 
   split_hyphen = line.split("-")
-  policy.required_min = split_hyphen.next().to_number()
+  policy.required_min = split_hyphen.next().get().to_number()
 
-  split_spaces = split_hyphen.next().split(" ")
-  policy.required_max = split_spaces.next().to_number()
+  split_spaces = split_hyphen.next().get().split(" ")
+  policy.required_max = split_spaces.next().get().to_number()
 
-  required_letter = split_spaces.next()
-  policy.required_letter = required_letter.split(":").next()
+  required_letter = split_spaces.next().get()
+  policy.required_letter = required_letter.split(":").next().get()
 
-  password = split_spaces.next()
+  password = split_spaces.next().get()
 
   policy, password
 

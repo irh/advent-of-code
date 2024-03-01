@@ -1,5 +1,7 @@
 # https://adventofcode.com/2021/day/4
 
+from iterator import repeat
+
 # Parse the next 5 lines and yield the 25 numbers that make up the board's grid
 # e.g.
 # 22 13 17 11  0
@@ -17,11 +19,11 @@ make_board = |lines|
   # The 25 grid numbers stored as a flat tuple
   grid: grid_iter(lines).to_tuple()
   # 25 bools that indicate whether or not a grid cell has been marked
-  marked: list.with_size 25, false
+  marked: repeat(false, 25).to_list()
   # The number of marked cells in each row
-  row_marked_count: list.with_size 5, 0
+  row_marked_count: repeat(0, 5).to_list()
   # The number of marked cells in each column
-  column_marked_count: list.with_size 5, 0
+  column_marked_count: repeat(0, 5).to_list()
   # Whether or not the board is in a winning state,
   # i.e. a row or column has 5 marked cells
   has_won: false
@@ -50,8 +52,8 @@ parse_input = |input|
   # Parse the draw order
   # e.g. 3,8,27,17,9...
   draw_order =
-    lines.next()
-      .split ","
+    lines.next().get()
+      .split ','
       .each string.to_number
       .to_tuple()
 

@@ -1,13 +1,13 @@
 # https://adventofcode.com/2021/day/14
 
 make_polymer = |input|
-  template = input.lines().next().chars().to_tuple()
+  template = input.lines().next().get().chars().to_tuple()
 
   instructions = input.lines().skip(2)
     .each |line|
       # e.g. 'CB -> H'
       tokens = line.split " -> "
-      tokens.next(), tokens.next()
+      tokens.next().get(), tokens.next().get()
     .to_map()
 
   return

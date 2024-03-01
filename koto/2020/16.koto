@@ -1,7 +1,7 @@
 # https://adventofcode.com/2020/day/16
 
 from io import extend_path, read_to_string
-import koto.script_dir
+from koto import script_dir
 
 parse_notes = |input|
   fields = {}
@@ -11,15 +11,12 @@ parse_notes = |input|
 
     # e.g.
     # departure location: 32-615 or 626-955
-    sections = line.split ": "
-    category = sections.next()
-    rules = sections.next().split(" ")
+    category, rules = line.split ": "
+    rules = rules.split(" ")
       .keep |word| word != "or"
       .each |word|
-        bounds = word.split("-")
-        min = bounds.next().to_number()
-        max = bounds.next().to_number()
-        min..=max
+        min, max = word.split("-")
+        min.to_number()..=max.to_number()
       .to_tuple()
     fields.insert category, {rules}
 
@@ -31,7 +28,7 @@ parse_notes = |input|
 
   lines.next() # your ticket:
 
-  your_ticket = parse_ticket lines.next()
+  your_ticket = parse_ticket lines.next().get()
 
   lines.next() #
   lines.next() # nearby tickets:
