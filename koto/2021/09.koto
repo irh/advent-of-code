@@ -1,6 +1,7 @@
 # https://adventofcode.com/2021/day/9
 
 from iterator import repeat
+from '../helpers' import run_day
 
 make_map = |input|
   map_width = input.lines().next().get().chars().count()
@@ -15,7 +16,7 @@ make_map = |input|
   return
     data: data
     map_width: map_width
-    last_row: (data.size() / map_width) - 1
+    last_row: ((size data) / map_width) - 1
 
     # Yields neighbouring map positions in clockwise order starting from the top
     neighbours: |i|
@@ -49,7 +50,7 @@ make_map = |input|
     part_two: ||
       map = self
       data = self.data
-      is_in_basin = repeat(false, data.size()).to_list()
+      is_in_basin = repeat(false, size data).to_list()
       basins = []
       assign_to_basin = |i, basin|
         is_in_basin[i] = true
@@ -66,23 +67,18 @@ make_map = |input|
           assign_to_basin i, basin
 
       # Sort the basins by size in descending order
-      basins.sort |basin| -basin.size()
+      basins.sort |basin| -(size basin)
       # The result is the product of the sizes of the three largest basins
       basins
-        .take(3)
-        .each(list.size)
+        .take 3
+        .each size
         .product()
 
 @main = ||
-  t = os.start_timer()
-
-  map = io.extend_path koto.script_dir, "input", "09" >> io.read_to_string
-    >> make_map
-
-  print "Part one: ${map.part_one()}" # 516
-  print "Part two: ${map.part_two()}" # 1023660
-
-  print "{:.3}s", t.elapsed()
+  run_day 9, |input|
+    map = make_map input
+    print "Part one: {map.part_one()}" # 516
+    print "Part two: {map.part_two()}" # 1023660
 
 @tests =
   @pre_test: ||

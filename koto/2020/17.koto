@@ -1,5 +1,6 @@
 # https://adventofcode.com/2020/day/17
 
+from koto import deep_copy
 import set
 
 generate_local_3d = ||
@@ -61,20 +62,20 @@ cycle_grid = |grid, local_positions|
 cycle_grid_3d = |grid|
   for _ in 0..6
     grid = cycle_grid grid, local_3d
-  grid.size()
+  size grid
 
 cycle_grid_4d = |grid|
   for _ in 0..6
     grid = cycle_grid grid, local_4d
-  grid.size()
+  size grid
 
 @main = ||
   grid = io.extend_path koto.script_dir, "input", "17"
     >> io.read_to_string
     >> parse_grid
 
-  print "Part one: ${cycle_grid_3d deep_copy grid}" # 382
-  print "Part two: ${cycle_grid_4d grid}" # 2552
+  print "Part one: {cycle_grid_3d deep_copy grid}" # 382
+  print "Part two: {cycle_grid_4d grid}" # 2552
 
 @tests =
   @pre_test: ||

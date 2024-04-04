@@ -1,6 +1,7 @@
 # https://adventofcode.com/2021/day/2
 
 from geometry import vec2
+from '../helpers' import run_day
 
 parse_input = |input|
   input
@@ -38,20 +39,14 @@ follow_commands_part_two = |commands|
 vec2_product = |v| (v.x() * v.y()).to_int()
 
 @main = ||
-  t = os.start_timer()
+  run_day 2, |input|
+    commands = parse_input input
 
-  commands =
-    io.extend_path koto.script_dir, "input", "02"
-      >> io.read_to_string
-      >> parse_input
+    part_one = commands >> follow_commands_part_one >> vec2_product
+    print "Part one: {part_one}" # 2322630
 
-  part_one = (follow_commands_part_one commands) >> vec2_product
-  print "Part one: $part_one" # 2322630
-
-  part_two = (follow_commands_part_two commands) >> vec2_product
-  print "Part two: $part_two" # 2105273490
-
-  print "{:.3}s", t.elapsed()
+    part_two = commands >> follow_commands_part_two >> vec2_product
+    print "Part two: {part_two}" # 2105273490
 
 @tests =
   @pre_test: ||

@@ -9,9 +9,8 @@ set_meta =
       self.data.insert value
       self
 
-    @meta is_empty: || self.size() == 0
-
-    @meta size: || self.data.size()
+    @size: || size self.data
+    @meta is_empty: || (size self) == 0
 
 export make_set = |values|
   data = {}

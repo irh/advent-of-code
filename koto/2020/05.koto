@@ -1,7 +1,7 @@
 # https://adventofcode.com/2020/day/5
 
-lower_half = |r| r.start()..r.start() + r.size() / 2
-upper_half = |r| r.start() + r.size() / 2..r.end()
+lower_half = |r| r.start()..r.start() + (size r) / 2
+upper_half = |r| r.start() + (size r) / 2..r.end()
 
 partition = |input, lower, max|
   input
@@ -29,8 +29,8 @@ find_missing_seat = |sorted_seat_ids|
     .to_list()
     .sort()
 
-  print "Part one: ${seat_ids.last()}" # 976
-  print "Part two: ${find_missing_seat seat_ids}" # 685
+  print "Part one: {seat_ids.last()}" # 976
+  print "Part two: {find_missing_seat seat_ids}" # 685
 
 @tests =
   @test part_one: ||

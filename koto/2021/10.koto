@@ -1,5 +1,7 @@
 # https://adventofcode.com/2021/day/10
 
+from '../helpers' import run_day
+
 # Checks an input line for invalid closing chars, and if none are found then the expected
 # list of closing chars is returned. An empty list indicates a complete input line.
 check_input_line = |line|
@@ -8,7 +10,7 @@ check_input_line = |line|
     match char
       '(' then close_stack.push ')'
       '[' then close_stack.push ']'
-      '{' then close_stack.push '}'
+      '\{' then close_stack.push '}'
       '<' then close_stack.push '>'
       other if close_stack.pop() != other then return other
   close_stack.reverse()
@@ -38,23 +40,16 @@ part_two = |input|
           '>' then 4
     .to_list()
     .sort()
-  scores[scores.size() / 2]
+  scores[(size scores) / 2]
 
 @main = ||
-  t = os.start_timer()
-
-  input = io.extend_path koto.script_dir, "input", "10"
-    >> io.read_to_string
-
-  print "Part one: ${part_one input}" # 318081
-  print "Part two: ${part_two input}" # 4361305341
-
-  print "{:.3}s", t.elapsed()
+  run_day 10, |input|
+    print "Part one: {part_one input}" # 318081
+    print "Part two: {part_two input}" # 4361305341
 
 @tests =
   @pre_test: ||
-    self.input = "\
-[({(<(())[]>[[{[]{<()<>>
+    self.input = r"[({(<(())[]>[[{[]{<()<>>
 [(()[<>])]({[<{<<[]>>(
 {([(<{}[<>[]}>{[]{[(<()>
 (((({<>}<{<{<>}{[]{[]{}

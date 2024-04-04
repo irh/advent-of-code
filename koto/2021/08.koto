@@ -1,6 +1,6 @@
 # https://adventofcode.com/2021/day/8
 
-import set
+from '../helpers' import make_set, run_day
 
 # Parse the input lines into input and output patterns
 # e.g. acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb | cdfeb fcadb cdfeb cdbaf
@@ -15,7 +15,7 @@ parse_entries = |input|
         .keep |s| not s.is_empty()
         .consume |pattern|
           pattern_chars = pattern.chars().to_set()
-          patterns.update pattern_chars.size(), [], |entry| entry.push pattern_chars
+          patterns.update (size pattern_chars), [], |entry| entry.push pattern_chars
       outputs = parts.next().get()
         .split(" ")
         .keep(|s| not s.is_empty())
@@ -28,7 +28,7 @@ part_one = |input|
   input
     .each |entry|
       entry.outputs
-        .keep |output| match output.size()
+        .keep |output| match (size output)
           2 or 4 or 3 or 7 then true
           else false
         .count()
@@ -72,7 +72,7 @@ find_mapping = |patterns|
   zero, one, two, three, four, five, six, seven, eight, nine
 
 decode_output_value = |outputs, mapping|
-  width = outputs.size() - 1
+  width = (size outputs) - 1
   outputs
     .each |output|
       mapping.position |x| x == output
@@ -88,16 +88,10 @@ part_two = |entries|
     .sum()
 
 @main = ||
-  t = os.start_timer()
-
-  input = io.extend_path koto.script_dir, "input", "08"
-    >> io.read_to_string
-    >> parse_entries
-
-  print "Part one: ${part_one input}" # 387
-  print "Part two: ${part_two input}" # 986034
-
-  print "{:.3}s", t.elapsed()
+  run_day 8, |input|
+    entries = parse_entries input
+    print "Part one: {part_one entries}" # 387
+    print "Part two: {part_two entries}" # 986034
 
 @tests =
   @pre_test: ||

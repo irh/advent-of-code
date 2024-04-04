@@ -1,11 +1,11 @@
 days = 9
 
-t = os.start_timer()
+t = start_timer()
 
 for day in 1..=days
-  print "Day $day"
-  import "${string.format '{:0>2}', day}"
+  print "Day {day}"
+  import '{day:02}'
   print ""
 
 print "Success!"
-print '{:.3}s', t.elapsed()
+print '{t.elapsed():.3}s'

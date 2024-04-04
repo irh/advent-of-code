@@ -1,8 +1,7 @@
 # https://adventofcode.com/2022/day/9
 
-import app
 from geometry import vec2
-from set import make_set
+from '../helpers' import make_set, run_day
 
 up = vec2 0, 1
 right = vec2 1, 0
@@ -69,16 +68,15 @@ run_steps = |input, bridge_size|
           follower += if dy > 0 then up else down
 
       tail_positions.insert bridge.last().to_tuple()
-  # print_positions tail_positions
-  tail_positions.size()
+  size tail_positions
 
 part_one = |input| run_steps input, 2
 part_two = |input| run_steps input, 10
 
 @main = ||
-  app.run 9, |input|
-    print 'Part one: ${part_one input}' # 6243
-    print 'Part two: ${part_two input}' # 2630
+  run_day 9, |input|
+    print 'Part one: {part_one input}' # 6243
+    print 'Part two: {part_two input}' # 2630
 
 @tests =
   @test part_one: ||

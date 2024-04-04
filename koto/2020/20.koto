@@ -40,9 +40,9 @@ make_tile = |tile_id, grid|
       row
         .each |cell| if cell == 1 then "#" else "."
         .to_string()
-    result = "\nTile ${self.tile_id}:\n"
+    result = "\nTile {self.tile_id}:\n"
     for row in self.grid
-      result += "${row_to_string row}\n"
+      result += "{row_to_string row}\n"
     result
 
 make_edge_map = |tiles|
@@ -58,7 +58,7 @@ corner_ids = |edge_map|
   unique_edge_count = {}
   for edge_id, tile_ids in edge_map
     match tile_ids
-      [unique] then
+      (unique) then
         unique_edge_count.update unique, 0, |count| count += 1
   unique_edge_count
     .keep |(tile_id, count)| count == 4 # 2 unique edges, * 2 for flipping
@@ -93,17 +93,17 @@ parse_input = |input|
     match lines.next()
       null then break tiles
       output if output.get().is_empty() then continue
-      output then throw "Expected empty line, got '{}'".format output.get()
+      output then throw "Expected empty line, got '{output.get()}'"
 
 @main = ||
   tiles = io.extend_path koto.script_dir, "input", "20"
     >> io.read_to_string
     >> parse_input
-  print "Part one: ${part_one tiles}" # 51214443014783
+  print "Part one: {part_one tiles}" # 51214443014783
 
 @tests =
   @test part_one: ||
     path = io.extend_path koto.script_dir, "input", "20-example"
     tiles = parse_input io.read_to_string path
-    assert_eq tiles.size(), 9
+    assert_eq (size tiles), 9
     assert_eq (part_one tiles), 20899048083289

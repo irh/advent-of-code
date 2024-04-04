@@ -1,6 +1,6 @@
 # https://adventofcode.com/2022/day/5
 
-import app
+from '../helpers' import run_day
 
 prepare_stacks = |input|
   stacks = []
@@ -9,12 +9,12 @@ prepare_stacks = |input|
     if line.is_empty()
       break
     for i, crate in line.chunks(4).enumerate()
-      if i >= stacks.size()
+      if i >= size stacks
         stacks.resize (i + 1), []
-      if crate.next().get() == ' '
-        continue
-      id = crate.next().get()
-      stacks[i].insert 0, id
+      _, id, _ = crate
+      match id
+        null or ' ' then continue
+        else stacks[i].insert 0, id
   stacks, lines
 
 read_result = |stacks|
@@ -41,15 +41,15 @@ part_two = |input|
   stacks, steps = prepare_stacks input
   for step in steps
     amount, source, target = read_step step, stacks
-    source_skip = source.size() - amount
+    source_skip = (size source) - amount
     target.extend source.skip source_skip
     source.resize source_skip
   read_result stacks
 
 @main = ||
-  app.run 5, |input|
-    print 'Part one: ${part_one input}' # SHQWSRBDL
-    print 'Part two: ${part_two input}' # CDTQZHBRS
+  run_day 5, |input|
+    print 'Part one: {part_one input}' # SHQWSRBDL
+    print 'Part two: {part_two input}' # CDTQZHBRS
 
 @tests =
   @pre_test: ||

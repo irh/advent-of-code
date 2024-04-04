@@ -14,16 +14,21 @@ set_meta =
     self.data.insert value
     self
 
-  @meta is_empty: || self.size() == 0
-
-  @meta size: || self.data.size()
+  @size: || size self.data
+  @meta is_empty: || (size self.data) == 0
 
 export make_set = |values|
   data = {}
-
+  result = {data}.with_meta set_meta
   if values != null
-    data.extend values
-
-  {data}.with_meta set_meta
+    result.extend values
+  result
 
 iterator.to_set = || make_set self
+
+@tests =
+  @test chars_to_set: ||
+    s = 'abccbadeffed'.to_set()
+    assert_eq s.to_string(), 'abcdef'
+    assert s.contains 'c'
+    assert not s.contains 'x'

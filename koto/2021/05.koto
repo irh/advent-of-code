@@ -1,6 +1,7 @@
 # https://adventofcode.com/2021/day/5
 
 from geometry import vec2
+from '../helpers' import run_day
 
 make_vent_line = |x0, y0, x1, y1|
   start: vec2 x0, y0
@@ -58,19 +59,15 @@ parse_input = |input|
     .to_tuple()
 
 @main = ||
-  t = os.start_timer()
+  run_day 5, |input|
+    vent_lines = parse_input input
 
-  vent_lines = io.extend_path koto.script_dir, "input", "05"
-    >> io.read_to_string
-    >> parse_input
+    vent_map = make_vent_map vent_lines, false
+    print "Part one: {vent_map.count_overlaps()}" # 5690
 
-  vent_map = make_vent_map vent_lines, false
-  print "Part one: ${vent_map.count_overlaps()}" # 5690
+    vent_map = make_vent_map vent_lines, true
+    print "Part two: {vent_map.count_overlaps()}" # 17741
 
-  vent_map = make_vent_map vent_lines, true
-  print "Part two: ${vent_map.count_overlaps()}" # 17741
-
-  print "{:.3}s", t.elapsed()
 
 @tests =
   @pre_test: ||

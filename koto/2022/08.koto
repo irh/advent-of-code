@@ -1,8 +1,7 @@
 # https://adventofcode.com/2022/day/8
 
-import app
+from '../helpers' import make_set, run_day
 from enum import make_enum
-from set import make_set
 
 directions = make_enum 'left', 'right', 'up', 'down'
 
@@ -40,8 +39,8 @@ part_one = |grid|
       if height == 9
         break
 
-  last_x = grid.first().size() - 1
-  last_y = grid.size() - 1
+  last_x = (size grid.first()) - 1
+  last_y = (size grid) - 1
   result = make_set()
   for y in 0..=last_y
     result.extend visible_trees(directions.right, y).each |x| x, y
@@ -49,11 +48,11 @@ part_one = |grid|
   for x in 0..=last_x
     result.extend visible_trees(directions.down, x).each |y| x, y
     result.extend visible_trees(directions.up, x).each |y| x, last_y - y
-  result.size()
+  size result
 
 part_two = |grid|
-  last_x = grid.first().size() - 1
-  last_y = grid.size() - 1
+  last_x = (size grid.first()) - 1
+  last_y = (size grid) - 1
 
   trees_from_position = |direction, x, y|
     match direction
@@ -91,10 +90,10 @@ part_two = |grid|
   result
 
 @main = ||
-  app.run 8, |input|
+  run_day 8, |input|
     grid = parse_input input
-    print 'Part one: ${part_one grid}' # 1713
-    print 'Part two: ${part_two grid}' # 268464
+    print 'Part one: {part_one grid}' # 1713
+    print 'Part two: {part_two grid}' # 268464
 
 @tests =
   @pre_test: ||

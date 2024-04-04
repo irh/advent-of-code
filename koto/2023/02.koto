@@ -47,8 +47,8 @@ part_two = |games|
 @main = ||
   run_day 2, |input|
     games = parse_input input
-    print "Part one: ${part_one games}" # 2278
-    print "Part two: ${part_two games}" # 67953
+    print "Part one: {part_one games}" # 2278
+    print "Part two: {part_two games}" # 67953
 
 @tests =
   @pre_test: ||

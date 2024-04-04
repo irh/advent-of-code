@@ -5,12 +5,12 @@ count_answers_part_one = |answers|
   answers_for_group = {}
   for line in answers.lines()
     if line.is_empty()
-      result += answers_for_group.size()
+      result += size answers_for_group
       answers_for_group = {}
     else
       for answer in line
         answers_for_group.insert answer
-  result + answers_for_group.size()
+  result + size answers_for_group
 
 count_answers_part_two = |answers|
   count_for_group = |people_in_group, answers_for_group|
@@ -35,8 +35,8 @@ count_answers_part_two = |answers|
 @main = ||
   input = io.read_to_string io.extend_path koto.script_dir, "input", "06"
 
-  print "Part one: ${count_answers_part_one input}" # 6903
-  print "Part two: ${count_answers_part_two input}" # 3493
+  print "Part one: {count_answers_part_one input}" # 6903
+  print "Part two: {count_answers_part_two input}" # 3493
 
 @tests =
   @pre_test: ||

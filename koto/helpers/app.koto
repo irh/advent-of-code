@@ -1,13 +1,11 @@
 from koto import script_dir
 from os import start_timer
 from io import extend_path, read_to_string
-from string import format
 
 export run_day = |day, handler|
+  path = extend_path script_dir, 'input', '{day:02}'
+  input = if io.exists path then read_to_string path else null
+
   t = start_timer()
-
-  extend_path script_dir, 'input', (format '{:0>2}', day)
-    >> read_to_string
-    >> handler
-
-  print '{:.3}s', t.elapsed()
+  handler input
+  print '{t.elapsed():.3}s'

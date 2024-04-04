@@ -23,7 +23,7 @@ last_digit = |line, digits|
     for digit, value in digits
       if line.ends_with digit
         return value
-    line = line[..line.size() - 1]
+    line = line[..(size line) - 1]
 
 calibration_value = |line, digits|
   first = first_digit line, digits
@@ -47,8 +47,8 @@ part_two = |input|
 
 @main = ||
   run_day 1, |input|
-    print "Part one: ${part_one input}" # 54081
-    print "Part two: ${part_two input}" # 54649
+    print "Part one: {part_one input}" # 54081
+    print "Part two: {part_two input}" # 54649
 
 @tests =
   @test calibration_value_1: ||

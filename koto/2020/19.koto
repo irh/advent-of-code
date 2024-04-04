@@ -11,7 +11,7 @@ parse_input = |input|
     first_char = rest.chars().next().get()
     match first_char
       '"' then
-        char = rest[1..(rest.size() - 1)]
+        char = rest[1..(size(rest) - 1)]
         rules.insert id, {char}
       else
         sequences = []
@@ -48,9 +48,9 @@ message_checker = |rules|
       null then
         char = rule.get "char"
         self.match_char char, message, rule_ids
-      [sequence] then
+      (sequence) then
         self.match_sequence sequence, message, rule_ids
-      [sequence_a, sequence_b] then
+      (sequence_a, sequence_b) then
         self.match_sequence(sequence_a, message, rule_ids)
           or self.match_sequence(sequence_b, message, rule_ids)
       else throw "Unsupported rule"
@@ -80,9 +80,9 @@ update_rules = |rules|
   rules, messages = io.extend_path koto.script_dir, "input", "19"
     >> io.read_to_string
     >> parse_input
-  print "Part one: ${valid_message_count rules, messages}" # 279
+  print "Part one: {valid_message_count rules, messages}" # 279
   update_rules rules
-  print "Part two: ${valid_message_count rules, messages}" # 384
+  print "Part two: {valid_message_count rules, messages}" # 384
 
 @tests =
   @test part_one: ||

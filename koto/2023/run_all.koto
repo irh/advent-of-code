@@ -1,14 +1,13 @@
 from os import start_timer
-from string import format
 
 days = 2
 
 t = start_timer()
 
 for day in 1..=days
-  print "Day $day"
-  import "${format '{:0>2}', day}"
+  print "Day {day}"
+  import '{day:02}'
   print ""
 
 print "Success!"
-print '{:.3}s', t.elapsed()
+print '{t.elapsed():.3}s'

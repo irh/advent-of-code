@@ -17,9 +17,9 @@ parse_program = |input|
 run_program = |program|
   ip = 0
   acc = 0
-  size = program.size()
-  visited = repeat(false, size).to_list()
-  while ip < size and not visited[ip]
+  program_size = size program
+  visited = repeat(false, program_size).to_list()
+  while ip < program_size and not visited[ip]
     op, value = program[ip]
     visited[ip] = true
     match op
@@ -30,10 +30,10 @@ run_program = |program|
         ip += 1
       ops.jmp then
         ip += value
-  acc.to_int(), ip >= size
+  acc.to_int(), ip >= program_size
 
 fix_program_and_get_result = |program|
-  for ip in 0..program.size()
+  for ip in 0..(size program)
     op, value = program[ip]
     new_op = match op
       ops.nop then ops.jmp
@@ -49,8 +49,8 @@ fix_program_and_get_result = |program|
   program = io.extend_path koto.script_dir, "input", "08"
     >> io.read_to_string
     >> parse_program
-  print "Part one: ${(run_program program)[0]}" # 1915
-  print "Part two: ${fix_program_and_get_result program}" # 944
+  print "Part one: {(run_program program)[0]}" # 1915
+  print "Part two: {fix_program_and_get_result program}" # 944
 
 @tests =
   @pre_test: ||

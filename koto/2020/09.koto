@@ -5,10 +5,10 @@ ring_buffer = |capacity|
   capacity: capacity
   start: 0
 
-  size: || self.data.size()
+  @size: || size self.data
 
   push: |x|
-    if self.size() < self.capacity
+    if (size self) < self.capacity
       self.data.push x
     else
       self.data[self.start] = x
@@ -24,10 +24,10 @@ parse_input = |input|
     .to_tuple()
 
 input_is_valid = |buffer, input|
-  size = buffer.size()
-  for i in 0..size
+  n = size buffer
+  for i in 0..n
     a = buffer.get i
-    for j in (i + 1)..size
+    for j in (i + 1)..n
       b = buffer.get j
       if a + b == input
         return true
@@ -36,17 +36,17 @@ input_is_valid = |buffer, input|
 find_first_invalid_input = |input, buffer_size|
   buffer = ring_buffer buffer_size
   for i, n in input.enumerate()
-    if buffer.size() == buffer_size
+    if (size buffer) == buffer_size
       if not input_is_valid buffer, n
         return n
     buffer.push n
 
 find_encryption_weakness = |input, buffer_size|
   invalid = find_first_invalid_input input, buffer_size
-  size = input.size()
-  for i in 0..size
+  n = size input
+  for i in 0..n
     sum = input[i]
-    for j in (i + 1)..size
+    for j in (i + 1)..n
       sum += input[j]
       if sum == invalid
         min, max = input[i..=j].min_max()
@@ -56,8 +56,8 @@ find_encryption_weakness = |input, buffer_size|
   input = io.extend_path koto.script_dir, "input", "09"
     >> io.read_to_string
     >> parse_input
-  print "Part one: ${find_first_invalid_input input, 25}" # 1930745883
-  print "Part two: ${find_encryption_weakness input, 25}" # 268878261
+  print "Part one: {find_first_invalid_input input, 25}" # 1930745883
+  print "Part two: {find_encryption_weakness input, 25}" # 268878261
 
 @tests =
   @pre_test: ||

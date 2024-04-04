@@ -14,15 +14,15 @@ play_game = |start_numbers, turn_count|
     last_number = n
 
   # Now play the game for the specified number of turns
-  for _ in 0..turn_count - start_numbers.size()
+  for _ in 0..turn_count - size start_numbers
     spoken_number = match numbers[last_number]
-      null or [_] then 0
-      [y, z] then z - y
+      null or (_) then 0
+      (y, z) then z - y
 
     match numbers[spoken_number]
       null then
         numbers[spoken_number] = [turn]
-      turns if turns.size() == 1 then
+      turns if size(turns) == 1 then
         turns.push turn
       turns then
         turns[0] = turns[1]
@@ -32,12 +32,11 @@ play_game = |start_numbers, turn_count|
     last_number = spoken_number
   last_number
 
-
 @main = ||
   start_numbers = (8, 11, 0, 19, 1, 2)
 
-  print "Part one: ${play_game start_numbers, 2020}" # 447
-  print "Part two: ${play_game start_numbers, 30000000}" # 11721679
+  print "Part one: {play_game start_numbers, 2020}" # 447
+  print "Part two: {play_game start_numbers, 30000000}" # 11721679
 
 @tests =
   @test part_one: ||

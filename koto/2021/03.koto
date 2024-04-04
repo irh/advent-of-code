@@ -1,5 +1,7 @@
 # https://adventofcode.com/2021/day/3
 
+from '../helpers' import run_day
+
 parse_input = |input|
   input
     .lines()
@@ -15,7 +17,7 @@ binary_digits_to_int = |digits|
   # e.g. 101101
   #           ^~~~ digits[5], LSB, no shift required
   #      ^~~~~~~ digits[0], needs to be shifted to the left 5 times
-  end_index = digits.size() - 1
+  end_index = (size digits) - 1
   digits
     .enumerate()
     .fold 0, |result, (i, d)|
@@ -31,7 +33,7 @@ signed_int_to_binary_digit = |count|
     else null
 
 get_power_consumption = |report|
-  report_width = report.first().size()
+  report_width = size report.first()
 
   # Prepare a list of 'counts', where a final negative value indicates that `0` is the
   # most common number, otherwise `1` is the most common number (we can assume that they
@@ -65,12 +67,12 @@ filter_report = |report, flipped|
   # so make a copy to avoid modifying the original data
   report = copy report
   on, off = if flipped then 0, 1 else 1, 0
-  for position in 0..report.first().size()
+  for position in 0..(size report.first())
     bit_criteria = match get_most_common_digit_in_position report, position
       0 then off
       1 or null then on
     report.retain |line| line[position] == bit_criteria
-    if report.size() == 1 then break
+    if (size report) == 1 then break
   binary_digits_to_int report.first()
 
 get_life_support_rating = |report|
@@ -79,15 +81,10 @@ get_life_support_rating = |report|
   oxygen_generator_rating * c02_scrubber_rating
 
 @main = ||
-  t = os.start_timer()
-
-  input = io.extend_path koto.script_dir, "input", "03"
-    >> io.read_to_string
-    >> parse_input
-  print "Part one: ${get_power_consumption input}" # 4191876
-  print "Part two: ${get_life_support_rating input}" # 3414905
-
-  print "{:.3}s", t.elapsed()
+  run_day 3, |input|
+    input = parse_input input
+    print "Part one: {get_power_consumption input}" # 4191876
+    print "Part two: {get_life_support_rating input}" # 3414905
 
 @tests =
   @pre_test: ||

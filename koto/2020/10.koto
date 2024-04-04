@@ -24,7 +24,7 @@ count_arrangements = |adapters|
   # The first adapter has a single arrangement
   arrangements = [1]
   # Iterate over the remaining adapters
-  for i in 1..adapters.size()
+  for i in 1..(size adapters)
     adapter = adapters[i]
     # Adapters with ratings <= 3 are also valid start points
     arrangements_for_adapter = if adapter <= 3 then 1 else 0
@@ -43,8 +43,8 @@ count_arrangements = |adapters|
     >> read_to_string
     >> parse_input
   differences = joltage_differences adapters
-  print "Part one: ${differences[1] * differences[3]}" # 2040
-  print "Part two: ${count_arrangements adapters}" # 28346956187648
+  print "Part one: {differences[1] * differences[3]}" # 2040
+  print "Part two: {count_arrangements adapters}" # 28346956187648
 
 @tests =
   @pre_test: ||

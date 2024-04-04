@@ -1,5 +1,7 @@
 # https://adventofcode.com/2021/day/14
 
+from '../helpers' import run_day
+
 make_polymer = |input|
   template = input.lines().next().get().chars().to_tuple()
 
@@ -46,16 +48,10 @@ step_polymer = |polymer, n|
   max - min
 
 @main = ||
-  t = os.start_timer()
-
-  polymer = io.extend_path koto.script_dir, "input", "14"
-    >> io.read_to_string
-    >> make_polymer
-
-  print "Part one: ${step_polymer polymer, 10}" # 4244
-  print "Part two: ${step_polymer polymer, 30}" # 4807056953866
-
-  print "{:.3}s", t.elapsed()
+  run_day 14, |input|
+    polymer = make_polymer input
+    print "Part one: {step_polymer polymer, 10}" # 4244
+    print "Part two: {step_polymer polymer, 30}" # 4807056953866
 
 @tests =
   @pre_test: ||

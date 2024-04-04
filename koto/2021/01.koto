@@ -1,5 +1,7 @@
 # https://adventofcode.com/2021/day/1
 
+from '../helpers' import run_day
+
 # Take each line of the input string and convert it into a number, returning a Tuple
 parse_input = |input|
   input
@@ -23,17 +25,11 @@ count_windowed_increases = |data|
   count_increases windowed_sums
 
 @main = ||
-  t = os.start_timer()
+  run_day 1, |input|
+    report = parse_input input
+    print "Part one: {count_increases report}" # 1754
+    print "Part two: {count_windowed_increases report}" # 1789
 
-  report =
-    io.extend_path koto.script_dir, "input", "01"
-      >> io.read_to_string
-      >> parse_input
-
-  print "Part one: ${count_increases report}" # 1754
-  print "Part two: ${count_windowed_increases report}" # 1789
-
-  print "{:.3}s", t.elapsed()
 
 @tests =
   @pre_test: ||

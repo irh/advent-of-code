@@ -58,8 +58,8 @@ find_contest_time = |bus_ids|
       >> parse_bus_notes
 
   bus, wait_time = (wait_time_for_next_bus bus_ids, start_time)
-  print "Part one: ${bus * wait_time}" # 2935
-  print "Part two: ${find_contest_time bus_ids}" # 836024966345345
+  print "Part one: {bus * wait_time}" # 2935
+  print "Part two: {find_contest_time bus_ids}" # 836024966345345
 
 @tests =
   @pre_test: ||

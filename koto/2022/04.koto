@@ -1,6 +1,6 @@
 # https://adventofcode.com/2022/day/4
 
-import app
+from '../helpers' import run_day
 
 parse_range = |r|
   min, max = r.split '-'
@@ -34,9 +34,9 @@ part_two = |input|
     .count()
 
 @main = ||
-  app.run 4, |input|
-    print "Part one: ${part_one input}" # 528
-    print "Part two: ${part_two input}" # 881
+  run_day 4, |input|
+    print "Part one: {part_one input}" # 528
+    print "Part two: {part_two input}" # 881
 
 @tests =
   @pre_test: ||

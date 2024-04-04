@@ -1,20 +1,19 @@
 # https://adventofcode.com/2022/day/6
 
-import app, set
+from '../helpers' import run_day
 
 find_marker = |input, window_size|
   for i, chunk in input.windows(window_size).enumerate()
-    s = chunk.to_set()
-    if s.size() == window_size
+    if (size chunk.to_set()) == window_size
       return i + window_size
 
 part_one = |input| find_marker input, 4
 part_two = |input| find_marker input, 14
 
 @main = ||
-  app.run 6, |input|
-    print 'Part one: ${part_one input}' # 1760
-    print 'Part two: ${part_two input}' # 2974
+  run_day 6, |input|
+    print 'Part one: {part_one input}' # 1760
+    print 'Part two: {part_two input}' # 2974
 
 @tests =
   @test part_one: ||

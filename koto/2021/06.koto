@@ -1,6 +1,7 @@
 # https://adventofcode.com/2021/day/6
 
 from iterator import repeat
+from '../helpers' import run_day
 
 make_simulation = |input|
   # Parse the input string and produce a list containing the number of fish alive with
@@ -25,17 +26,11 @@ make_simulation = |input|
     fish_counts.sum()
 
 @main = ||
-  t = os.start_timer()
+  run_day 6, |input|
+    simulation = input >> string.trim >> make_simulation
+    print "Part one: {simulation.run 80}" # 351092
+    print "Part two: {simulation.run 256}" # 1595330616005
 
-  simulation = io.extend_path koto.script_dir, "input", "06"
-    >> io.read_to_string
-    >> string.trim
-    >> make_simulation
-
-  print "Part one: ${simulation.run 80}" # 351092
-  print "Part two: ${simulation.run 256}" # 1595330616005
-
-  print "{:.3}s", t.elapsed()
 
 @tests =
   @pre_test: ||

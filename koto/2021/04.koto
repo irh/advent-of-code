@@ -1,6 +1,8 @@
 # https://adventofcode.com/2021/day/4
 
 from iterator import repeat
+from string import to_number
+from '../helpers' import run_day
 
 # Parse the next 5 lines and yield the 25 numbers that make up the board's grid
 # e.g.
@@ -13,7 +15,7 @@ grid_iter = |lines|
   for line in lines.take 5
     for n in line.split " "
       if not n.is_empty()
-        yield n.to_number()
+        yield to_number n
 
 make_board = |lines|
   # The 25 grid numbers stored as a flat tuple
@@ -54,7 +56,7 @@ parse_input = |input|
   draw_order =
     lines.next().get()
       .split ','
-      .each string.to_number
+      .each to_number
       .to_tuple()
 
   # Parse the remaining lines as board grids
@@ -75,17 +77,10 @@ run_game = |game|
           yield board.score n
 
 @main = ||
-  t = os.start_timer()
-
-  winning_scores = io.extend_path koto.script_dir, "input", "04"
-    >> io.read_to_string
-    >> parse_input
-    >> run_game
-
-  print "Part one: ${winning_scores.next()}" # 65325
-  print "Part two: ${winning_scores.last()}" # 4624
-
-  print "{:.3}s", t.elapsed()
+  run_day 4, |input|
+    winning_scores = input >> parse_input >> run_game
+    print "Part one: {winning_scores.next().get()}" # 6532504
+    print "Part two: {winning_scores.last()}" # 4624
 
 @tests =
   @pre_test: ||

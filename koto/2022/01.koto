@@ -1,6 +1,6 @@
 # https://adventofcode.com/2022/day/1
 
-import app
+from '../helpers' import run_day
 
 parse_input = |input|
   result = []
@@ -15,10 +15,10 @@ parse_input = |input|
   result.sort()
 
 @main = ||
-  app.run 1, |input|
+  run_day 1, |input|
     input = parse_input input
-    print "Part one: ${input.last()}" # 66306
-    print "Part two: ${input.reversed().take(3).sum()}" # 195292
+    print "Part one: {input.last()}" # 66306
+    print "Part two: {input.reversed().take(3).sum()}" # 195292
 
 @tests =
   @pre_test: ||

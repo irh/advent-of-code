@@ -1,5 +1,7 @@
 # https://adventofcode.com/2021/day/12
 
+from '../helpers' import run_day
+
 parse_input = |input|
   caves = {}
 
@@ -44,9 +46,8 @@ get_path_count = |caves, allow_double_small_cave|
   visit_caves("start", [], allow_double_small_cave).count()
 
 @main = ||
-  t = os.start_timer()
-
-  caves = parse_input "\
+  run_day 12, ||
+    caves = parse_input "\
 end-MY
 MY-xc
 ho-NF
@@ -69,11 +70,9 @@ uh-NF
 yf-ho
 end-uh
 start-NF"
+    print "Part one: {get_path_count caves, false}" # 5076
+    print "Part two: {get_path_count caves, true}" # 145643
 
-  print "Part one: ${get_path_count caves, false}" # 5076
-  print "Part two: ${get_path_count caves, true}" # 145643
-
-  print "{:.3}s", t.elapsed()
 
 @tests =
   small: "\

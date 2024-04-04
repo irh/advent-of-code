@@ -7,7 +7,7 @@ parse_bag_rules = |input|
       # e.g. light red bags contain 1 bright white bag, 2 muted yellow bags.
       # e.g.  faded blue bags contain no other bags.
       words = line.split " "
-      bag = "${words.next().get()} ${words.next().get()}"
+      bag = "{words.next().get()} {words.next().get()}"
       words.next() # bags
       words.next() # contain
       contained_bags = {}
@@ -18,7 +18,7 @@ parse_bag_rules = |input|
           output if output.get() == "no" then
             break bag, contained_bags
           quantity then
-            contained_bag = "${words.next().get()} ${words.next().get()}"
+            contained_bag = "{words.next().get()} {words.next().get()}"
             contained_bags.insert contained_bag, quantity.get().to_number()
             words.next() # bag(s)
     .to_map()
@@ -45,8 +45,8 @@ count_contained_bags = |bag, rules|
     >> io.read_to_string
     >> parse_bag_rules
 
-  print "Part one: ${count_bag_options "shiny gold", rules}" # 272
-  print "Part two: ${count_contained_bags "shiny gold", rules}" # 172246
+  print "Part one: {count_bag_options "shiny gold", rules}" # 272
+  print "Part two: {count_contained_bags "shiny gold", rules}" # 172246
 
 @tests =
   @pre_test: ||

@@ -7,19 +7,21 @@ parse_expenses = |input|
     .to_tuple()
 
 product_of_two_expenses_that_sum_to_2020 = |expenses|
-  for x in 0..expenses.size()
+  n = size expenses
+  for x in 0..n
     expense_x = expenses[x]
-    for y in x + 1..expenses.size()
+    for y in x + 1..n
       expense_y = expenses[y]
       if expense_x + expense_y == 2020
         return expense_x * expense_y
 
 product_of_three_expenses_that_sum_to_2020 = |expenses|
-  for x in 0..expenses.size()
+  n = size expenses
+  for x in 0..n
     expense_x = expenses[x]
-    for y in x + 1..expenses.size()
+    for y in x + 1..n
       expense_y = expenses[y]
-      for z in y + 1..expenses.size()
+      for z in y + 1..n
         expense_z = expenses[z]
         if expense_x + expense_y + expense_z == 2020
           return expense_x * expense_y * expense_z
@@ -30,10 +32,10 @@ product_of_three_expenses_that_sum_to_2020 = |expenses|
     >> parse_expenses
 
   part_one = product_of_two_expenses_that_sum_to_2020 input
-  print "Part one: $part_one" # 974304
+  print "Part one: {part_one}" # 974304
 
   part_two = product_of_three_expenses_that_sum_to_2020 input
-  print "Part two: $part_two" # 236430480
+  print "Part two: {part_two}" # 236430480
 
 @tests =
   @pre_test: ||

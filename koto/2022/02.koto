@@ -1,6 +1,6 @@
 # https://adventofcode.com/2022/day/2
 
-import app
+from '../helpers' import run_day
 
 play_round = |them, us|
   choice_score = match us
@@ -32,9 +32,9 @@ part_two = |input|
   score
 
 @main = ||
-  app.run 2, |input|
-    print "Part one: ${part_one input}" # 11906
-    print "Part two: ${part_two input}" # 11186
+  run_day 2, |input|
+    print "Part one: {part_one input}" # 11906
+    print "Part two: {part_two input}" # 11186
 
 @tests =
   @pre_test: ||

@@ -1,5 +1,7 @@
 # https://adventofcode.com/2021/day/7
 
+from '../helpers' import run_day
+
 parse_input = |input|
   input
     .split ","
@@ -10,7 +12,7 @@ parse_input = |input|
 
 part_one = |positions|
   # The target is the median position
-  target = positions[positions.size() / 2]
+  target = positions[(size positions) / 2]
   positions
     .each |position| (position - target).abs()
     .sum()
@@ -23,23 +25,17 @@ part_two = |positions|
         diff * (diff + 1) / 2
       .sum()
   # The target is one of the integers next to the mean position
-  target = positions.sum() / positions.size()
+  target = positions.sum() / size positions
   x = cost_to_reach_target target.floor()
   y = cost_to_reach_target target.ceil()
   x.min(y).to_int()
 
 @main = ||
-  t = os.start_timer()
+  run_day 7, |input|
+    positions = input >> string.trim >> parse_input
 
-  positions = io.extend_path koto.script_dir, "input", "07"
-    >> io.read_to_string
-    >> string.trim
-    >> parse_input
-
-  print "Part one: ${part_one positions}" # 336701
-  print "Part two: ${part_two positions}" # 95167302
-
-  print "{:.3}s", t.elapsed()
+    print "Part one: {part_one positions}" # 336701
+    print "Part two: {part_two positions}" # 95167302
 
 @tests =
   @pre_test: ||

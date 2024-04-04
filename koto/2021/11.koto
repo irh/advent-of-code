@@ -1,5 +1,7 @@
 # https://adventofcode.com/2021/day/11
 
+from '../helpers' import run_day
+
 make_grid = |input|
   grid_width = input.lines().next().get().chars().count()
 
@@ -13,7 +15,7 @@ make_grid = |input|
   return
     grid: grid
     grid_width: grid_width
-    last_row: (grid.size() / grid_width) - 1
+    last_row: ((size grid) / grid_width) - 1
 
     # Yields neighbouring grid positions
     neighbours: |i|
@@ -49,7 +51,7 @@ make_grid = |input|
 
     step_simulation: ||
       grid = self.grid
-      grid_size = grid.size()
+      grid_size = size grid
       flash_count = 0
       keep_going = true
       # First, add 1 to each octopus
@@ -78,7 +80,7 @@ make_grid = |input|
           print ""
 
 part_one = |grid|
-  grid = deep_copy grid
+  grid = koto.deep_copy grid
   flash_count = 0
   for i in 0..100
     flash_count += grid.step_simulation()
@@ -87,15 +89,15 @@ part_one = |grid|
 part_two = |grid|
   i = 0
   flash_count = 0
-  grid_size = grid.grid.size()
+  grid_size = size grid.grid
   until flash_count == grid_size
     flash_count = grid.step_simulation()
     i += 1
   i
 
 @main = ||
-  t = os.start_timer()
-  grid = make_grid "\
+  run_day 11, ||
+    grid = make_grid "\
 4836484555
 4663841772
 3512484556
@@ -107,9 +109,8 @@ part_two = |grid|
 5725855786
 1717382281"
 
-  print "Part one: ${part_one grid}" # 1659
-  print "Part two: ${part_two grid}" # 127
-  print "{:.3}s", t.elapsed()
+    print "Part one: {part_one grid}" # 1659
+    print "Part two: {part_two grid}" # 127
 
 @tests =
   @pre_test: ||

@@ -1,6 +1,6 @@
 # https://adventofcode.com/2022/day/7
 
-import app
+from '../helpers' import run_day
 
 make_dir = ||
   child_dirs: []
@@ -12,8 +12,8 @@ make_fs = |input|
   for line in input.lines().skip(1)
     switch
       line.starts_with 'dir' then null
-      line.starts_with '\$ ls' then null
-      line.starts_with '\$ cd' then
+      line.starts_with '$ ls' then null
+      line.starts_with '$ cd' then
         if line[5..] == '..'
           path.pop()
           cwd = path.last()
@@ -51,10 +51,10 @@ part_two = |fs|
   dir_sizes.find |n| n >= space_needed
 
 @main = ||
-  app.run 7, |input|
+  run_day 7, |input|
     fs = make_fs input
-    print 'Part one: ${part_one fs}' # 1555642
-    print 'Part two: ${part_two fs}' # 5974547
+    print 'Part one: {part_one fs}' # 1555642
+    print 'Part two: {part_two fs}' # 5974547
 
 @tests =
   @pre_test: ||

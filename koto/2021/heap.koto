@@ -41,7 +41,7 @@ heap_meta =
 
   @meta insert: |value|
     data = self.data
-    i = data.size()
+    i = size data
     data.push value
     sift_up self, i
 
@@ -65,7 +65,7 @@ export make_heap = |values, compare_fn|
 
   if values
     heap.data = values.to_list()
-    for i in (heap.data.size() - 1)..=0
+    for i in ((size heap.data) - 1)..=0
       sift_down heap, i
 
   heap

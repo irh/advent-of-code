@@ -11,8 +11,8 @@ parse_input = |input|
 count_trees_on_grid = |grid, (slope_x, slope_y)|
   pos_x, pos_y = 0, 0
   tree_count = 0
-  height = grid.size()
-  width = grid[0].size()
+  height = size grid
+  width = size grid[0]
   until pos_y >= height
     if grid[pos_y][pos_x % width]
       tree_count += 1
@@ -30,8 +30,8 @@ check_slopes_and_multiply_tree_counts  = |grid|
   input = io.extend_path koto.script_dir, "input", "03"
     >> io.read_to_string
     >> parse_input
-  print "Part one: ${count_trees_on_grid input, (3, 1)}" # 250
-  print "Part two: ${check_slopes_and_multiply_tree_counts input}" # 1592662500
+  print "Part one: {count_trees_on_grid input, (3, 1)}" # 250
+  print "Part two: {check_slopes_and_multiply_tree_counts input}" # 1592662500
 
 @tests =
   @pre_test: ||

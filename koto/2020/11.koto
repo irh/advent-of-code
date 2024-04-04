@@ -21,7 +21,7 @@ make_floor_grid = |input|
             "L" then cell.empty
             "#" then cell.occupied
         .to_list()
-      (grid.extend(row), row_count + 1, row.size())
+      (grid.extend(row), row_count + 1, (size row))
 
   return
     grid: grid
@@ -134,15 +134,15 @@ make_floor_grid = |input|
     >> io.read_to_string
     >> make_floor_grid
 
-  part_one = deep_copy grid
+  part_one = koto.deep_copy grid
   print "Part one"
-  print "- seats stabilised in ${part_one.fill_seats_until_stable_part_one()} steps"
-  print "- occupied seats: ${part_one.occupied_seats_count()}" # 2261
+  print "- seats stabilised in {part_one.fill_seats_until_stable_part_one()} steps"
+  print "- occupied seats: {part_one.occupied_seats_count()}" # 2261
 
   part_two = grid
   print "Part two"
-  print "- seats stabilised in ${part_two.fill_seats_until_stable_part_two()} steps"
-  print "- occupied seats: ${part_two.occupied_seats_count()}" # 2039
+  print "- seats stabilised in {part_two.fill_seats_until_stable_part_two()} steps"
+  print "- occupied seats: {part_two.occupied_seats_count()}" # 2039
 
 @tests =
   @pre_test: ||
