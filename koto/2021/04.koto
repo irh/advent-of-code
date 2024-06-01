@@ -78,7 +78,7 @@ run_game = |game|
 
 @main = ||
   run_day 4, |input|
-    winning_scores = input >> parse_input >> run_game
+    winning_scores = input -> parse_input -> run_game
     print "Part one: {winning_scores.next().get()}" # 6532504
     print "Part two: {winning_scores.last()}" # 4624
 

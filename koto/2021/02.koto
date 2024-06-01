@@ -42,10 +42,10 @@ vec2_product = |v| (v.x() * v.y()).to_int()
   run_day 2, |input|
     commands = parse_input input
 
-    part_one = commands >> follow_commands_part_one >> vec2_product
+    part_one = commands -> follow_commands_part_one -> vec2_product
     print "Part one: {part_one}" # 2322630
 
-    part_two = commands >> follow_commands_part_two >> vec2_product
+    part_two = commands -> follow_commands_part_two -> vec2_product
     print "Part two: {part_two}" # 2105273490
 
 @tests =

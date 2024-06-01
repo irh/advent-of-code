@@ -47,7 +47,7 @@ get_power_consumption = |report|
 
   # Convert the counts into binary digits, and then convert the binary digits into an int
   gamma = counts.each(signed_int_to_binary_digit).to_tuple()
-    >> binary_digits_to_int
+    -> binary_digits_to_int
 
   # The epsilon value is the gamma with its bits flipped, but we're only intrested in the
   # N least significant bits, so first create a mask of `1`s covering those bits.

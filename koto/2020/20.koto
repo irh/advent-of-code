@@ -97,8 +97,8 @@ parse_input = |input|
 
 @main = ||
   tiles = io.extend_path koto.script_dir, "input", "20"
-    >> io.read_to_string
-    >> parse_input
+    -> io.read_to_string
+    -> parse_input
   print "Part one: {part_one tiles}" # 51214443014783
 
 @tests =

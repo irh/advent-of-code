@@ -40,8 +40,8 @@ count_arrangements = |adapters|
 
 @main = ||
   adapters = io.extend_path script_dir, "input", "10"
-    >> read_to_string
-    >> parse_input
+    -> read_to_string
+    -> parse_input
   differences = joltage_differences adapters
   print "Part one: {differences[1] * differences[3]}" # 2040
   print "Part two: {count_arrangements adapters}" # 28346956187648

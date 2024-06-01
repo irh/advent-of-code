@@ -96,8 +96,8 @@ part_two = |entries|
 @tests =
   @pre_test: ||
     self.input = io.extend_path koto.script_dir, "input", "08-example"
-      >> io.read_to_string
-      >> parse_entries
+      -> io.read_to_string
+      -> parse_entries
 
   @test part_one: ||
     assert_eq (part_one self.input), 26

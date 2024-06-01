@@ -32,7 +32,7 @@ part_two = |positions|
 
 @main = ||
   run_day 7, |input|
-    positions = input >> string.trim >> parse_input
+    positions = input -> string.trim -> parse_input
 
     print "Part one: {part_one positions}" # 336701
     print "Part two: {part_two positions}" # 95167302

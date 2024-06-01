@@ -54,7 +54,7 @@ evaluate_2 = |input|
 
 @main = ||
   input = io.extend_path koto.script_dir, 'input', '18'
-    >> io.read_to_string
+    -> io.read_to_string
   expressions = input.lines().to_tuple()
 
   part_one = expressions

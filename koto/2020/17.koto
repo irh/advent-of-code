@@ -71,8 +71,8 @@ cycle_grid_4d = |grid|
 
 @main = ||
   grid = io.extend_path koto.script_dir, "input", "17"
-    >> io.read_to_string
-    >> parse_grid
+    -> io.read_to_string
+    -> parse_grid
 
   print "Part one: {cycle_grid_3d deep_copy grid}" # 382
   print "Part two: {cycle_grid_4d grid}" # 2552

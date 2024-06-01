@@ -54,8 +54,8 @@ find_contest_time = |bus_ids|
 @main = ||
   start_time, bus_ids =
     io.extend_path koto.script_dir, "input", "13"
-      >> io.read_to_string
-      >> parse_bus_notes
+      -> io.read_to_string
+      -> parse_bus_notes
 
   bus, wait_time = (wait_time_for_next_bus bus_ids, start_time)
   print "Part one: {bus * wait_time}" # 2935

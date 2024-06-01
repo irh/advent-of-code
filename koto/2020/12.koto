@@ -49,8 +49,8 @@ run_instructions_part_two = |instructions|
 
 @main = ||
   instructions = io.extend_path koto.script_dir, "input", "12"
-    >> io.read_to_string
-    >> parse_instructions
+    -> io.read_to_string
+    -> parse_instructions
   print "Part one: {run_instructions_part_one instructions}" # 319
   print "Part two: {run_instructions_part_two instructions}" # 50157
 

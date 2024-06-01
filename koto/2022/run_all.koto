@@ -1,6 +1,6 @@
 days = 9
 
-t = start_timer()
+t = os.start_timer()
 
 for day in 1..=days
   print "Day {day}"
