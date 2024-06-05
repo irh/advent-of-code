@@ -33,7 +33,7 @@ make_map = |input|
         yield i - 1
 
     # Find low points in the map and sum their 'risk levels'
-    part_one: ||
+    part_one: || -> Number
       result = 0
       for i, height in self.data.enumerate()
         neighbour_count = 0
@@ -47,7 +47,7 @@ make_map = |input|
       result
 
     # Find the three largest basins in the map and multiply their sizes together
-    part_two: ||
+    part_two: || -> Number
       map = self
       data = self.data
       is_in_basin = repeat(false, size data).to_list()

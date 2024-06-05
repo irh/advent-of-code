@@ -4,7 +4,7 @@ from '../helpers' import make_set, run_day
 
 # Parse the input lines into input and output patterns
 # e.g. acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb | cdfeb fcadb cdfeb cdbaf
-parse_entries = |input|
+parse_entries = |input: String| -> Tuple
   input
     .lines()
     .each |line|
@@ -24,7 +24,7 @@ parse_entries = |input|
       {patterns, outputs}
     .to_tuple()
 
-part_one = |input|
+part_one = |input: Iterable| -> Number
   input
     .each |entry|
       entry.outputs
@@ -35,7 +35,7 @@ part_one = |input|
     .sum()
 
 # Finds the segment mapping from the sorted list of scrambled segment patterns
-find_mapping = |patterns|
+find_mapping = |patterns: Map| -> Tuple
   missing_segment = |a, b|
     a.find |key| not b.contains key
 
@@ -71,7 +71,7 @@ find_mapping = |patterns|
   # Return the patterns in order
   zero, one, two, three, four, five, six, seven, eight, nine
 
-decode_output_value = |outputs, mapping|
+decode_output_value = |outputs: Iterable, mapping: Iterable| -> Number
   width = (size outputs) - 1
   outputs
     .each |output|
@@ -80,7 +80,7 @@ decode_output_value = |outputs, mapping|
     .fold 0, |result, (i, n)|
       result += n * 10.pow(width - i)
 
-part_two = |entries|
+part_two = |entries: Iterable| -> Number
   entries
     .each |entry|
       mapping = find_mapping entry.patterns
