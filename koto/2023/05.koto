@@ -1,0 +1,193 @@
+# https://adventofcode.com/2023/day/5
+
+from '../helpers' import run_day
+from iterator import once
+
+tuple_to_range = |(start, length)| start..start + length
+
+parse_numbers = |numbers: String| -> Iterator
+  numbers
+    .split ' '
+    .keep |n| not n.is_empty()
+    .each |n| n.to_number()
+
+mapping_meta =
+  @type: 'Mapping'
+
+  @meta contains: |x| self.source.contains x
+  @meta intersects: |r|
+    match self.source.intersection r
+      null then false
+      i then (size i) > 0
+
+  @meta map: |x: Number| -> Number
+    offset = x - self.source.start()
+    self.destination.start() + offset
+
+  @meta map_range: |r: Range| -> Range
+    offset = r.start() - self.source.start()
+    start = self.destination.start() + offset
+    start..start + size r
+
+make_mapping = |destination: Number, source: Number, length: Number| -> Mapping
+  {
+    destination: destination..destination + length,
+    source: source..source + length,
+  }.with_meta mapping_meta
+
+parse_mappings = |mappings: Iterator| -> Tuple
+  mappings
+    .take |line| not line.is_empty()
+    .each |line|
+      destination, source, length = line.split ' '
+      make_mapping destination.to_number(), source.to_number(), length.to_number()
+    .to_tuple()
+
+apply_mapping = |mappings: Tuple, n: Number| -> Number
+  match mappings.find(|mapping| mapping.contains n)
+    mapping: Mapping then mapping.map n
+    else n
+
+# A generator that takes a series of ranges, and yields mapped ranges
+# Only the portions of a range that overlap with a mapping region need to be mapped.
+# The remaining portions of input ranges also get passed through the mapping.
+# So there is a forking in the ranges: a single input range can branch into several others.
+apply_mapping_range = |mappings: Tuple, ranges: Iterable| -> Range
+  for r in ranges
+    match mappings.find(|mapping| mapping.intersects r)
+      mapping: Mapping then
+        # The range intersects with a mapping
+        # - The intersection needs to be mapped
+        # - The remaining range after the intersection may also need to be mapped
+        #   - (the remaining range before the intersection can be ignored because the mappings
+        #     are sorted)
+        i = mapping.source.intersection r
+        before = r.start().min(i.start())..i.start()
+        after = i.end()..(r.end().max(i.end()))
+        if (size before) > 0
+          for mapped in apply_mapping_range mappings, once(before)
+            yield mapped
+        yield mapping.map_range i
+        if (size after) > 0
+          for mapped in apply_mapping_range mappings, once(after)
+            yield mapped
+      else yield r
+
+almanac_meta =
+  @type: 'Almanac'
+
+  @meta seed_to_location: |seed: Number| -> Number
+    apply_mapping self.seed_to_soil, seed
+      -> apply_mapping self.soil_to_fertilizer
+      -> apply_mapping self.fertilizer_to_water
+      -> apply_mapping self.water_to_light
+      -> apply_mapping self.light_to_temperature
+      -> apply_mapping self.temperature_to_humidity
+      -> apply_mapping self.humidity_to_location
+
+  @meta seed_ranges_to_location_ranges: |seed_range: Range| -> Iterator
+    apply_mapping_range self.seed_to_soil, once(seed_range)
+      -> apply_mapping_range self.soil_to_fertilizer
+      -> apply_mapping_range self.fertilizer_to_water
+      -> apply_mapping_range self.water_to_light
+      -> apply_mapping_range self.light_to_temperature
+      -> apply_mapping_range self.temperature_to_humidity
+      -> apply_mapping_range self.humidity_to_location
+
+parse_almanac = |input: String| -> Almanac
+  lines = input.lines()
+
+  _, numbers = lines.next().get().split ':'
+  seeds = parse_numbers(numbers).to_tuple()
+
+  lines.next()
+  assert_eq lines.next().get(), 'seed-to-soil map:'
+  seed_to_soil = parse_mappings lines
+
+  assert_eq lines.next().get(), 'soil-to-fertilizer map:'
+  soil_to_fertilizer = parse_mappings lines
+
+  assert_eq lines.next().get(), 'fertilizer-to-water map:'
+  fertilizer_to_water = parse_mappings lines
+
+  assert_eq lines.next().get(), 'water-to-light map:'
+  water_to_light = parse_mappings lines
+
+  assert_eq lines.next().get(), 'light-to-temperature map:'
+  light_to_temperature = parse_mappings lines
+
+  assert_eq lines.next().get(), 'temperature-to-humidity map:'
+  temperature_to_humidity = parse_mappings lines
+
+  assert_eq lines.next().get(), 'humidity-to-location map:'
+  humidity_to_location = parse_mappings lines
+
+  {
+    seeds, seed_to_soil, soil_to_fertilizer, fertilizer_to_water, water_to_light,
+    light_to_temperature, temperature_to_humidity, humidity_to_location,
+  }.with_meta almanac_meta
+
+part_one = |almanac: Almanac| -> Number
+  almanac
+    .seeds
+    .each |seed| almanac.seed_to_location seed
+    .min()
+
+part_two = |almanac: Almanac| -> Number
+  almanac
+    .seeds
+    .chunks 2
+    .each tuple_to_range
+    .each |seed_range| almanac.seed_ranges_to_location_ranges seed_range
+    .flatten()
+    .each |range| range.start()
+    .min()
+
+@main = ||
+  run_day 5, |input|
+    almanac = parse_almanac input
+    print "Part one: {part_one almanac}" # 836040384
+    print "Part two: {part_two almanac}" # 10834440
+
+@tests =
+  @pre_test: ||
+    self.almanac = parse_almanac "\
+seeds: 79 14 55 13
+
+seed-to-soil map:
+50 98 2
+52 50 48
+
+soil-to-fertilizer map:
+0 15 37
+37 52 2
+39 0 15
+
+fertilizer-to-water map:
+49 53 8
+0 11 42
+42 0 7
+57 7 4
+
+water-to-light map:
+88 18 7
+18 25 70
+
+light-to-temperature map:
+45 77 23
+81 45 19
+68 64 13
+
+temperature-to-humidity map:
+0 69 1
+1 0 69
+
+humidity-to-location map:
+60 56 37
+56 93 4"
+
+  @test part_one: ||
+    assert_eq (part_one self.almanac), 35
+
+  @test part_two: ||
+    assert_eq (part_two self.almanac), 46
