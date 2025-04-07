@@ -33,11 +33,11 @@ part_two = |input|
           return result + item_score item
 
 @main = ||
-  run_day 3, |input|
+  run_day koto.script_dir(), 3, |input|
     print "Part one: {part_one input}" # 7967
     print "Part two: {part_two input}" # 2716
 
-@tests =
+export
   @pre_test: ||
     self.input = "\
 vJrwpWtwJgWrhcsFMMfFFhFp

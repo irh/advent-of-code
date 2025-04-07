@@ -34,11 +34,11 @@ part_two = |input|
     .count()
 
 @main = ||
-  run_day 4, |input|
+  run_day koto.script_dir(), 4, |input|
     print "Part one: {part_one input}" # 528
     print "Part two: {part_two input}" # 881
 
-@tests =
+export
   @pre_test: ||
     self.input = "\
 2-4,6-8

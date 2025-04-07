@@ -25,13 +25,13 @@ count_windowed_increases = |data|
   count_increases windowed_sums
 
 @main = ||
-  run_day 1, |input|
+  run_day koto.script_dir(), 1, |input|
     report = parse_input input
     print "Part one: {count_increases report}" # 1754
     print "Part two: {count_windowed_increases report}" # 1789
 
 
-@tests =
+export
   @pre_test: ||
     self.report = parse_input "\
 199

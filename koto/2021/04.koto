@@ -43,10 +43,12 @@ make_board = |lines|
   # Returns the board's score,
   # found by multiplying the last drawn number by the sum of the board's unmarked cells
   score: |last_number|
-    last_number * self.grid.zip(self.marked)
+    unmarked_sum = self.grid.zip(self.marked)
       .keep |(_, marked)| not marked
       .each |(n, _)| n
       .sum()
+    last_number * unmarked_sum
+
 
 parse_input = |input|
   lines = input.lines()
@@ -77,12 +79,12 @@ run_game = |game|
           yield board.score n
 
 @main = ||
-  run_day 4, |input|
+  run_day koto.script_dir(), 4, |input|
     winning_scores = input -> parse_input -> run_game
     print "Part one: {winning_scores.next().get()}" # 6532504
     print "Part two: {winning_scores.last()}" # 4624
 
-@tests =
+export
   @pre_test: ||
     self.game = parse_input "\
 7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
@@ -106,7 +108,7 @@ run_game = |game|
  2  0 12  3  7"
 
   @test part_one: ||
-    assert_eq run_game(self.game).next(), 4512
+    assert_eq run_game(self.game).next().get(), 4512
 
   @test part_two: ||
     assert_eq run_game(self.game).last(), 1924

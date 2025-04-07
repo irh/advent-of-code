@@ -101,12 +101,12 @@ part_two = |schematic| -> Number
     .sum()
 
 @main = ||
-  run_day 3, |input|
+  run_day koto.script_dir(), 3, |input|
     schematic = make_schematic input
     print "Part one: {part_one schematic}" # 512794
     print "Part two: {part_two schematic}" # ?
 
-@tests =
+export
   @pre_test: ||
     self.schematic = make_schematic '
 467..114..

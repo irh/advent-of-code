@@ -51,15 +51,15 @@ part_two = |fs|
   dir_sizes.find |n| n >= space_needed
 
 @main = ||
-  run_day 7, |input|
+  run_day koto.script_dir(), 7, |input|
     fs = make_fs input
     print 'Part one: {part_one fs}' # 1555642
     print 'Part two: {part_two fs}' # 5974547
 
-@tests =
+export
   @pre_test: ||
     self.fs =
-      io.extend_path koto.script_dir, 'input', '07-test'
+      io.extend_path koto.script_dir(), 'input', '07-test'
         -> io.read_to_string
         -> make_fs
 

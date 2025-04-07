@@ -4,18 +4,18 @@ from geometry import vec2
 from '../helpers' import make_set, run_day
 
 fold_x = |dot, n|
-  x, y = dot
+  x = dot.start()
   if x < n
     dot
   else
-    (x - 2 * (x - n)), y
+    (x - 2 * (x - n))..dot.end()
 
 fold_y = |dot, n|
-  x, y = dot
+  y = dot.end()
   if y < n
     dot
   else
-    x, (y - 2 * (y - n))
+    dot.start()..(y - 2 * (y - n))
 
 make_paper = ||
   dots: make_set()
@@ -35,11 +35,11 @@ make_paper = ||
       bounds_x, bounds_y = dots.fold
         (0..0, 0..0),
         |(bounds_x, bounds_y), dot|
-          (bounds_x.union dot[0]), (bounds_y.union dot[1])
+          (bounds_x.union dot.start()), (bounds_y.union dot.end())
 
       for y in bounds_y
         for x in bounds_x
-          if dots.contains (x, y)
+          if dots.contains (x..y)
             yield '#'
           else
             yield '.'
@@ -54,7 +54,7 @@ parse_input = |input|
     if line.is_empty() then break
 
     x, y = line.split ','
-    paper.dots.insert (x.to_number(), y.to_number())
+    paper.dots.insert x.to_number()..y.to_number()
 
   instructions = lines
     .each |line|
@@ -66,7 +66,7 @@ parse_input = |input|
   {paper, instructions}
 
 @main = ||
-  run_day 13, |input|
+  run_day koto.script_dir(), 13, |input|
     input = parse_input input
     paper = input.paper
     instructions = input.instructions.iter()
@@ -80,7 +80,7 @@ parse_input = |input|
     print "Part two: \n{paper}"
 
 
-@tests =
+export
   @pre_test: ||
     self.input = parse_input "\
 6,10
@@ -107,8 +107,10 @@ fold along x=5"
 
   @test example_input: ||
     paper = self.input.paper
+    print paper
     instructions = self.input.instructions.iter()
     paper.fold instructions.next().get()
+    print paper
     assert_eq (size paper.dots), 17
     paper.fold instructions.next().get()
     assert_eq (size paper.dots), 16

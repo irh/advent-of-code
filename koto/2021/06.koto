@@ -26,13 +26,13 @@ make_simulation = |input|
     fish_counts.sum()
 
 @main = ||
-  run_day 6, |input|
+  run_day koto.script_dir(), 6, |input|
     simulation = input -> string.trim -> make_simulation
     print "Part one: {simulation.run 80}" # 351092
     print "Part two: {simulation.run 256}" # 1595330616005
 
 
-@tests =
+export
   @pre_test: ||
     self.simulation = make_simulation "3,4,3,1,2"
 

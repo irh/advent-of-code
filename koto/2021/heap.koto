@@ -56,21 +56,19 @@ heap_meta =
 
   @meta is_empty: || self.data.is_empty()
 
-export make_heap = |values, compare_fn|
-  heap =
-    data: []
-    compare_fn: compare_fn or |a, b| a < b
+export make_heap = |values: Iterable = (), compare_fn = |a, b| a < b|
+  heap = {
+    data: values.to_list(),
+    compare_fn
+  }.with_meta heap_meta
 
-  heap = heap.with_meta heap_meta
-
-  if values
-    heap.data = values.to_list()
+  if not heap.data.is_empty()
     for i in ((size heap.data) - 1)..=0
       sift_down heap, i
 
   heap
 
-@tests =
+export
   @test empty_heap: ||
     heap = make_heap()
     assert heap.is_empty()

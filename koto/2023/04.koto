@@ -50,12 +50,12 @@ part_two = |cards| -> Number
   score
 
 @main = ||
-  run_day 4, |input|
+  run_day koto.script_dir(), 4, |input|
     cards = parse_cards input
     print "Part one: {part_one cards}" # 28538
     print "Part two: {part_two cards}" # 9425061
 
-@tests =
+export
   @pre_test: ||
     self.cards = parse_cards "\
 Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53

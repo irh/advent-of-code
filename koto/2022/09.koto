@@ -1,6 +1,7 @@
 # https://adventofcode.com/2022/day/9
 
 from geometry import vec2
+from iterator import generate
 from '../helpers' import make_set, run_day
 
 up = vec2 0, 1
@@ -30,9 +31,7 @@ print_positions = |positions|
     print line.to_string()
 
 run_steps = |input, bridge_size|
-  bridge = 0..bridge_size
-    .each || vec2 0, 0
-    .to_tuple()
+  bridge = generate(bridge_size, || vec2 0, 0).to_tuple()
   tail_positions = make_set()
   tail_positions.insert bridge.last().to_tuple()
 
@@ -46,6 +45,7 @@ run_steps = |input, bridge_size|
     for _ in 0..n.to_number()
       bridge.first() += dir
       for leader, follower in bridge.windows 2
+        leader, follower
         distance = leader - follower
         dx, dy = distance
         dx_abs, dy_abs = dx.abs(), dy.abs()
@@ -74,11 +74,11 @@ part_one = |input| run_steps input, 2
 part_two = |input| run_steps input, 10
 
 @main = ||
-  run_day 9, |input|
+  run_day koto.script_dir(), 9, |input|
     print 'Part one: {part_one input}' # 6243
     print 'Part two: {part_two input}' # 2630
 
-@tests =
+export
   @test part_one: ||
     input = '\
 R 4

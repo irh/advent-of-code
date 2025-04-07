@@ -11,11 +11,11 @@ part_one = |input| find_marker input, 4
 part_two = |input| find_marker input, 14
 
 @main = ||
-  run_day 6, |input|
+  run_day koto.script_dir(), 6, |input|
     print 'Part one: {part_one input}' # 1760
     print 'Part two: {part_two input}' # 2974
 
-@tests =
+export
   @test part_one: ||
     assert_eq (part_one 'mjqjpqmgbljsphdztnvjfqwrcgsmlb'), 7
     assert_eq (part_one 'bvwbjplbgvbhsrlpgdmjqwftvncz'), 5

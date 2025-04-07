@@ -1,6 +1,7 @@
 # https://adventofcode.com/2021/day/8
 
 from '../helpers' import make_set, run_day
+from koto import script_dir
 
 # Parse the input lines into input and output patterns
 # e.g. acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb | cdfeb fcadb cdfeb cdbaf
@@ -88,14 +89,14 @@ part_two = |entries: Iterable| -> Number
     .sum()
 
 @main = ||
-  run_day 8, |input|
+  run_day script_dir(), 8, |input|
     entries = parse_entries input
     print "Part one: {part_one entries}" # 387
     print "Part two: {part_two entries}" # 986034
 
-@tests =
+export
   @pre_test: ||
-    self.input = io.extend_path koto.script_dir, "input", "08-example"
+    self.input = io.extend_path script_dir(), "input", "08-example"
       -> io.read_to_string
       -> parse_entries
 

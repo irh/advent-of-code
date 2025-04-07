@@ -53,21 +53,17 @@ evaluate_2 = |input|
   evaluate_expression tokens, ops, 0
 
 @main = ||
-  input = io.extend_path koto.script_dir, 'input', '18'
+  input = io.extend_path koto.script_dir(), 'input', '18'
     -> io.read_to_string
   expressions = input.lines().to_tuple()
 
-  part_one = expressions
-    .each |expression| evaluate_1 expression
-    .sum()
+  part_one = expressions.each(evaluate_1).sum()
   print "Part one: {part_one}" # 45840336521334
 
-  part_two = expressions
-    .each |expression| evaluate_2 expression
-    .sum()
+  part_two = expressions.each(evaluate_2).sum()
   print "Part two: {part_two}" # 328920644404583
 
-@tests =
+export
   @test part_one: ||
     assert_eq (evaluate_1 "1 + 2 * 3 + 4 * 5 + 6"), 71
     assert_eq (evaluate_1 "1 + (2 * 3) + (4 * (5 + 6))"), 51

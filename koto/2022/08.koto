@@ -90,12 +90,12 @@ part_two = |grid|
   result
 
 @main = ||
-  run_day 8, |input|
+  run_day koto.script_dir(), 8, |input|
     grid = parse_input input
     print 'Part one: {part_one grid}' # 1713
     print 'Part two: {part_two grid}' # 268464
 
-@tests =
+export
   @pre_test: ||
     self.input = parse_input '\
 30373

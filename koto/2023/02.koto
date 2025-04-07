@@ -45,12 +45,12 @@ part_two = |games|
     .sum()
 
 @main = ||
-  run_day 2, |input|
+  run_day koto.script_dir(), 2, |input|
     games = parse_input input
     print "Part one: {part_one games}" # 2278
     print "Part two: {part_two games}" # 67953
 
-@tests =
+export
   @pre_test: ||
     self.games = parse_input "\
 Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green

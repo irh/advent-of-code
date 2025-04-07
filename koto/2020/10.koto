@@ -24,8 +24,7 @@ count_arrangements = |adapters|
   # The first adapter has a single arrangement
   arrangements = [1]
   # Iterate over the remaining adapters
-  for i in 1..(size adapters)
-    adapter = adapters[i]
+  for i, adapter in adapters.enumerate().skip(1)
     # Adapters with ratings <= 3 are also valid start points
     arrangements_for_adapter = if adapter <= 3 then 1 else 0
     # Add the number of arrangements from previous adapters within range
@@ -39,19 +38,19 @@ count_arrangements = |adapters|
   arrangements.last()
 
 @main = ||
-  adapters = io.extend_path script_dir, "input", "10"
+  adapters = io.extend_path script_dir(), "input", "10"
     -> read_to_string
     -> parse_input
   differences = joltage_differences adapters
   print "Part one: {differences[1] * differences[3]}" # 2040
   print "Part two: {count_arrangements adapters}" # 28346956187648
 
-@tests =
+export
   @pre_test: ||
     self.adapters_1 =
-      parse_input read_to_string extend_path script_dir, "input", "10-example-1"
+      parse_input read_to_string extend_path script_dir(), "input", "10-example-1"
     self.adapters_2 =
-      parse_input read_to_string extend_path script_dir, "input", "10-example-2"
+      parse_input read_to_string extend_path script_dir(), "input", "10-example-2"
 
   @test part_one: ||
     differences = joltage_differences self.adapters_1

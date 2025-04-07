@@ -15,12 +15,12 @@ parse_input = |input|
   result.sort()
 
 @main = ||
-  run_day 1, |input|
+  run_day koto.script_dir(), 1, |input|
     input = parse_input input
     print "Part one: {input.last()}" # 66306
     print "Part two: {input.reversed().take(3).sum()}" # 195292
 
-@tests =
+export
   @pre_test: ||
     self.input = parse_input "\
 1000

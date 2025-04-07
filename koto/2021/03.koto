@@ -81,12 +81,12 @@ get_life_support_rating = |report|
   oxygen_generator_rating * c02_scrubber_rating
 
 @main = ||
-  run_day 3, |input|
+  run_day koto.script_dir(), 3, |input|
     input = parse_input input
     print "Part one: {get_power_consumption input}" # 4191876
     print "Part two: {get_life_support_rating input}" # 3414905
 
-@tests =
+export
   @pre_test: ||
     self.report = parse_input "\
 00100

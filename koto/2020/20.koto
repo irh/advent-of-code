@@ -96,14 +96,14 @@ parse_input = |input|
       output then throw "Expected empty line, got '{output.get()}'"
 
 @main = ||
-  tiles = io.extend_path koto.script_dir, "input", "20"
+  tiles = io.extend_path koto.script_dir(), "input", "20"
     -> io.read_to_string
     -> parse_input
   print "Part one: {part_one tiles}" # 51214443014783
 
-@tests =
+export
   @test part_one: ||
-    path = io.extend_path koto.script_dir, "input", "20-example"
+    path = io.extend_path koto.script_dir(), "input", "20-example"
     tiles = parse_input io.read_to_string path
     assert_eq (size tiles), 9
     assert_eq (part_one tiles), 20899048083289

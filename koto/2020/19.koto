@@ -77,17 +77,17 @@ update_rules = |rules|
   rules.insert 11, {sequences: [[42, 31], [42, 11, 31]]}
 
 @main = ||
-  rules, messages = io.extend_path koto.script_dir, "input", "19"
+  rules, messages = io.extend_path koto.script_dir(), "input", "19"
     -> io.read_to_string
     -> parse_input
   print "Part one: {valid_message_count rules, messages}" # 279
   update_rules rules
   print "Part two: {valid_message_count rules, messages}" # 384
 
-@tests =
+export
   @test part_one: ||
     rules, messages =
-      parse_input io.read_to_string koto.script_dir + "/input/19-example-1"
+      parse_input io.read_to_string koto.script_dir() + "/input/19-example-1"
     checker = message_checker rules
     assert checker.check_message "ababbb"
     assert checker.check_message "abbbab"
@@ -98,7 +98,7 @@ update_rules = |rules|
 
   @test part_two: ||
     rules, messages =
-      parse_input io.read_to_string koto.script_dir + "/input/19-example-2"
+      parse_input io.read_to_string koto.script_dir() + "/input/19-example-2"
     assert_eq (valid_message_count rules, messages), 3
 
     update_rules rules

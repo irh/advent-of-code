@@ -31,13 +31,13 @@ part_two = |positions|
   x.min(y).to_int()
 
 @main = ||
-  run_day 7, |input|
+  run_day koto.script_dir(), 7, |input|
     positions = input -> string.trim -> parse_input
 
     print "Part one: {part_one positions}" # 336701
     print "Part two: {part_two positions}" # 95167302
 
-@tests =
+export
   @pre_test: ||
     self.positions = parse_input "16,1,2,0,4,2,7,1,2,14"
 

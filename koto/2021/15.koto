@@ -85,13 +85,13 @@ make_cave_map = |input|
       self.last_row = ((size self.grid) / self.grid_width) - 1
 
 @main = ||
-  run_day 15, |input|
+  run_day koto.script_dir(), 15, |input|
     cave_map = make_cave_map input
     print "Part one: {cave_map.shortest_path_risk()}" # 498
     cave_map.expand_grid()
     print "Part two: {cave_map.shortest_path_risk()}" # 2901
 
-@tests =
+export
   @pre_test: ||
     self.cave_map = make_cave_map "\
 1163751742

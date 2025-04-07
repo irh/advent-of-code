@@ -17,16 +17,13 @@ set_meta =
   @size: || size self.data
   @meta is_empty: || (size self.data) == 0
 
-export make_set = |values|
-  data = {}
-  result = {data}.with_meta set_meta
-  if values != null
-    result.extend values
-  result
+export make_set = |values: Iterable? = null|
+  data = values?.to_map() or {}
+  {data}.with_meta set_meta
 
 iterator.to_set = || make_set self
 
-@tests =
+export
   @test chars_to_set: ||
     s = 'abccbadeffed'.to_set()
     assert_eq s.to_string(), 'abcdef'

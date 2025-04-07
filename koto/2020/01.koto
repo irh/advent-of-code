@@ -27,7 +27,7 @@ product_of_three_expenses_that_sum_to_2020 = |expenses|
           return expense_x * expense_y * expense_z
 
 @main = ||
-  input = io.extend_path koto.script_dir, "input", "01"
+  input = io.extend_path koto.script_dir(), "input", "01"
     -> io.read_to_string
     -> parse_expenses
 
@@ -37,7 +37,7 @@ product_of_three_expenses_that_sum_to_2020 = |expenses|
   part_two = product_of_three_expenses_that_sum_to_2020 input
   print "Part two: {part_two}" # 236430480
 
-@tests =
+export
   @pre_test: ||
     self.input = "\
 1721

@@ -75,12 +75,12 @@ make_map = |input|
         .product()
 
 @main = ||
-  run_day 9, |input|
+  run_day koto.script_dir(), 9, |input|
     map = make_map input
     print "Part one: {map.part_one()}" # 516
     print "Part two: {map.part_two()}" # 1023660
 
-@tests =
+export
   @pre_test: ||
     self.map = make_map "\
 2199943210

@@ -130,7 +130,7 @@ make_floor_grid = |input|
         result += "\n"
 
 @main = ||
-  grid = io.extend_path koto.script_dir, "input", "11"
+  grid = io.extend_path koto.script_dir(), "input", "11"
     -> io.read_to_string
     -> make_floor_grid
 
@@ -144,7 +144,7 @@ make_floor_grid = |input|
   print "- seats stabilised in {part_two.fill_seats_until_stable_part_two()} steps"
   print "- occupied seats: {part_two.occupied_seats_count()}" # 2039
 
-@tests =
+export
   @pre_test: ||
     self.grid = make_floor_grid "\
 L.LL.LL.LL

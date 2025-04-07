@@ -23,7 +23,7 @@ find_missing_seat = |sorted_seat_ids|
       return b - 1
 
 @main = ||
-  seat_ids = (io.read_to_string io.extend_path koto.script_dir, "input", "05")
+  seat_ids = (io.read_to_string io.extend_path koto.script_dir(), "input", "05")
     .lines()
     .each |seat_code| seat_id seat_code
     .to_list()
@@ -32,7 +32,7 @@ find_missing_seat = |sorted_seat_ids|
   print "Part one: {seat_ids.last()}" # 976
   print "Part two: {find_missing_seat seat_ids}" # 685
 
-@tests =
+export
   @test part_one: ||
     assert_eq (seat_id "FBFBBFFRLR"), 357
     assert_eq (seat_id "BFFFBBFRRR"), 567

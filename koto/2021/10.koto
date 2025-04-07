@@ -43,11 +43,11 @@ part_two = |input|
   scores[(size scores) / 2]
 
 @main = ||
-  run_day 10, |input|
+  run_day koto.script_dir(), 10, |input|
     print "Part one: {part_one input}" # 318081
     print "Part two: {part_two input}" # 4361305341
 
-@tests =
+export
   @pre_test: ||
     self.input = r"[({(<(())[]>[[{[]{<()<>>
 [(()[<>])]({[<{<<[]>>(

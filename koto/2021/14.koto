@@ -48,12 +48,12 @@ step_polymer = |polymer, n|
   max - min
 
 @main = ||
-  run_day 14, |input|
+  run_day koto.script_dir(), 14, |input|
     polymer = make_polymer input
     print "Part one: {step_polymer polymer, 10}" # 4244
     print "Part two: {step_polymer polymer, 30}" # 4807056953866
 
-@tests =
+export
   @pre_test: ||
     self.polymer= make_polymer "\
 NNCB

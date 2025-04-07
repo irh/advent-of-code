@@ -59,7 +59,7 @@ parse_input = |input|
     .to_tuple()
 
 @main = ||
-  run_day 5, |input|
+  run_day koto.script_dir(), 5, |input|
     vent_lines = parse_input input
 
     vent_map = make_vent_map vent_lines, false
@@ -69,7 +69,7 @@ parse_input = |input|
     print "Part two: {vent_map.count_overlaps()}" # 17741
 
 
-@tests =
+export
   @pre_test: ||
     self.vent_lines = parse_input "\
 0,9 -> 5,9

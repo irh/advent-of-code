@@ -46,13 +46,13 @@ fix_program_and_get_result = |program|
       return result
 
 @main = ||
-  program = io.extend_path koto.script_dir, "input", "08"
+  program = io.extend_path koto.script_dir(), "input", "08"
     -> io.read_to_string
     -> parse_program
   print "Part one: {(run_program program)[0]}" # 1915
   print "Part two: {fix_program_and_get_result program}" # 944
 
-@tests =
+export
   @pre_test: ||
     self.program = parse_program "\
 nop +0
@@ -67,7 +67,7 @@ acc +6
 "
 
   @test parse_program: ||
-    assert_eq self.program.size(), 9
+    assert_eq (size self.program), 9
     assert_eq self.program[0][0], ops.nop
     assert_eq self.program[0][1], 0
     assert_eq self.program[2][0], ops.jmp

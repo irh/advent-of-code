@@ -96,7 +96,7 @@ part_two = |grid|
   i
 
 @main = ||
-  run_day 11, ||
+  run_day koto.script_dir(), 11, |_input|
     grid = make_grid "\
 4836484555
 4663841772
@@ -112,7 +112,7 @@ part_two = |grid|
     print "Part one: {part_one grid}" # 1659
     print "Part two: {part_two grid}" # 127
 
-@tests =
+export
   @pre_test: ||
     self.grid = make_grid "\
 5483143223

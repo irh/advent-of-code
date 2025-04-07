@@ -47,11 +47,11 @@ part_two = |input|
   read_result stacks
 
 @main = ||
-  run_day 5, |input|
+  run_day koto.script_dir(), 5, |input|
     print 'Part one: {part_one input}' # SHQWSRBDL
     print 'Part two: {part_two input}' # CDTQZHBRS
 
-@tests =
+export
   @pre_test: ||
     self.input = '    [D]
 [N] [C]

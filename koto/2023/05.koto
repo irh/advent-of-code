@@ -144,12 +144,12 @@ part_two = |almanac: Almanac| -> Number
     .min()
 
 @main = ||
-  run_day 5, |input|
+  run_day koto.script_dir(), 5, |input|
     almanac = parse_almanac input
     print "Part one: {part_one almanac}" # 836040384
     print "Part two: {part_two almanac}" # 10834440
 
-@tests =
+export
   @pre_test: ||
     self.almanac = parse_almanac "\
 seeds: 79 14 55 13

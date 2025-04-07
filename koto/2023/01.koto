@@ -46,11 +46,11 @@ part_two = |input|
     .sum()
 
 @main = ||
-  run_day 1, |input|
+  run_day koto.script_dir(), 1, |input|
     print "Part one: {part_one input}" # 54081
     print "Part two: {part_two input}" # 54649
 
-@tests =
+export
   @test calibration_value_1: ||
     assert_eq (calibration_value_1 '1abc2'), 12
     assert_eq (calibration_value_1 'pqr3stu8vwx'), 38

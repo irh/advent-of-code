@@ -39,7 +39,7 @@ follow_commands_part_two = |commands|
 vec2_product = |v| (v.x() * v.y()).to_int()
 
 @main = ||
-  run_day 2, |input|
+  run_day koto.script_dir(), 2, |input|
     commands = parse_input input
 
     part_one = commands -> follow_commands_part_one -> vec2_product
@@ -48,7 +48,7 @@ vec2_product = |v| (v.x() * v.y()).to_int()
     part_two = commands -> follow_commands_part_two -> vec2_product
     print "Part two: {part_two}" # 2105273490
 
-@tests =
+export
   @pre_test: ||
     self.commands = parse_input "\
 forward 5

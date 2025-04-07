@@ -38,7 +38,7 @@ play_game = |start_numbers, turn_count|
   print "Part one: {play_game start_numbers, 2020}" # 447
   print "Part two: {play_game start_numbers, 30000000}" # 11721679
 
-@tests =
+export
   @test part_one: ||
     assert_eq (play_game (0, 3, 6), 2020), 436
 
