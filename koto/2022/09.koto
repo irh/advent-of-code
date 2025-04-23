@@ -24,14 +24,14 @@ print_positions = |positions|
       line.push switch
         x == 0 and y == 0 then
           's'
-        positions.contains vec2(x, y).to_tuple() then
+        positions.contains((x, y)) then
           '#'
         else
           '.'
     print line.to_string()
 
 run_steps = |input, bridge_size|
-  bridge = generate(bridge_size, || vec2 0, 0).to_tuple()
+  bridge = generate(|| vec2(0, 0), bridge_size).to_tuple()
   tail_positions = make_set()
   tail_positions.insert bridge.last().to_tuple()
 

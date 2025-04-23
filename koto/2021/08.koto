@@ -79,7 +79,7 @@ decode_output_value = |outputs: Iterable, mapping: Iterable| -> Number
       mapping.position |x| x == output
     .enumerate()
     .fold 0, |result, (i, n)|
-      result += n * 10.pow(width - i)
+      result += n * 10 ^ (width - i)
 
 part_two = |entries: Iterable| -> Number
   entries

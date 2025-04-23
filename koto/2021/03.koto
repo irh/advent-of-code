@@ -51,7 +51,7 @@ get_power_consumption = |report|
 
   # The epsilon value is the gamma with its bits flipped, but we're only intrested in the
   # N least significant bits, so first create a mask of `1`s covering those bits.
-  mask = (2.pow report_width) - 1
+  mask = (2 ^ report_width) - 1
   epsilon = gamma.flip_bits().and mask
   gamma * epsilon
 

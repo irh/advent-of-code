@@ -57,7 +57,7 @@ find_contest_time = |bus_ids|
       -> io.read_to_string
       -> parse_bus_notes
 
-  bus, wait_time = (wait_time_for_next_bus bus_ids, start_time)
+  bus, wait_time = wait_time_for_next_bus bus_ids, start_time
   print "Part one: {bus * wait_time}" # 2935
   print "Part two: {find_contest_time bus_ids}" # 836024966345345
 
@@ -71,7 +71,7 @@ export
     self.bus_ids = bus_notes[1]
 
   @test part_one: ||
-    bus, wait_time = (wait_time_for_next_bus self.bus_ids, self.start_time)
+    bus, wait_time = wait_time_for_next_bus self.bus_ids, self.start_time
     assert_eq bus, 59
     assert_eq wait_time, 5
 

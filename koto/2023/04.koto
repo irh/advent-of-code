@@ -23,7 +23,7 @@ make_card = |input: String| -> Card
   # Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
   _card_id, numbers = input.split ':'
   winning, mine = numbers.split '|'
-  {winning: (parse_numbers winning), mine: (parse_numbers mine)}
+  {winning: parse_numbers winning, mine: parse_numbers mine}
     .with_meta card_meta
 
 parse_cards = |input: String| -> Tuple
@@ -33,7 +33,7 @@ part_one = |cards| -> Number
   cards
     .each |card|
       winning_count = card.winning_number_count()
-      score = if winning_count == 0 then 0 else 2.pow winning_count - 1
+      score = if winning_count == 0 then 0 else 2 ^ (winning_count - 1)
     .sum()
 
 part_two = |cards| -> Number

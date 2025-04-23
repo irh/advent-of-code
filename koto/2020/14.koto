@@ -5,15 +5,15 @@ from enum import make_enum
 commands = make_enum "mask", "mem"
 
 int_to_bits = |n, bit_count|
-  # Assuming n < 2.pow bit_count
-  x = 2.pow (bit_count - 1)
+  # Assuming n < 2 ^ bit_count
+  x = 2 ^ (bit_count - 1)
   for _ in 0..bit_count
     yield (n / x).floor()
     n %= x
     x /= 2
 
 bits_to_int = |bits|
-  initial_multiplier = 2.pow (size(bits) - 1)
+  initial_multiplier = 2 ^ (size(bits) - 1)
   result, _ = bits.fold (0, initial_multiplier), |(sum, multiplier), bit|
     sum += bit * multiplier
     multiplier = (multiplier / 2).floor()
@@ -61,7 +61,7 @@ apply_mask_to_value = |value, mask|
     .to_tuple()
 
 index_decoder = |index, mask|
-  decoded, floating_bits = (int_to_bits index, 36)
+  decoded, floating_bits = int_to_bits(index, 36)
     .zip mask
     .fold ([], []), |(result, floating_bits), (index_bit, mask_bit)|
       result.push match mask_bit
@@ -71,7 +71,7 @@ index_decoder = |index, mask|
       result, floating_bits
   floating_count = size floating_bits
 
-  bit_permutations = (0..2.pow floating_count)
+  bit_permutations = (0..2 ^ floating_count)
     .each |n| int_to_bits n, floating_count
   for bit_permutation in bit_permutations
     for i, bit in floating_bits.zip bit_permutation
@@ -88,7 +88,9 @@ run_program = |program, version|
         index, value = value_1, value_2
         match version
           1 then
-            memory.insert index, (apply_mask_to_value value, mask)
+            mask
+              -> apply_mask_to_value value
+              -> memory.insert index
           2 then
             for decoded_index in index_decoder index, mask
               memory.insert decoded_index, value
