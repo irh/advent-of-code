@@ -68,4 +68,3 @@ move 1 from 1 to 2'
 
   @test part_two: ||
     assert_eq (part_two self.input), 'MCD'
-

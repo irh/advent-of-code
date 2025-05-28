@@ -4,8 +4,8 @@ from geometry import vec2
 
 north = vec2 0, 1
 south = vec2 0, -1
-east  = vec2 1, 0
-west  = vec2 -1, 0
+east = vec2 1, 0
+west = vec2 -1, 0
 
 parse_instructions = |input|
   input.lines()

@@ -68,7 +68,6 @@ parse_input = |input|
     vent_map = make_vent_map vent_lines, true
     print "Part two: {vent_map.count_overlaps()}" # 17741
 
-
 export
   @pre_test: ||
     self.vent_lines = parse_input "\

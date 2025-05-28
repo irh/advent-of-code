@@ -1,17 +1,17 @@
 set_meta =
-    @type: 'Set'
-    @iterator: || self.data.keys()
+  @type: 'Set'
+  @iterator: || self.data.keys()
 
-    @meta contains: |value|
-      self.data.contains_key value
+  @meta contains: |value|
+    self.data.contains_key value
 
-    @meta insert: |value|
-      self.data.insert value
-      self
+  @meta insert: |value|
+    self.data.insert value
+    self
 
-    @meta is_empty: || self.size() == 0
+  @meta is_empty: || self.size() == 0
 
-    @meta size: || self.data.size()
+  @meta size: || self.data.size()
 
 export make_set = |values|
   data = {}

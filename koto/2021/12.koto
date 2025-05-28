@@ -73,7 +73,6 @@ start-NF"
     print "Part one: {get_path_count caves, false}" # 5076
     print "Part two: {get_path_count caves, true}" # 145643
 
-
 export
   small: "\
 start-A

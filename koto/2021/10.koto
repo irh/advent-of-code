@@ -65,4 +65,3 @@ export
 
   @test part_two: ||
     assert_eq (part_two self.input), 288957
-

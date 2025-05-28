@@ -4,6 +4,7 @@ from enum import make_enum
 
 cell = make_enum "floor", "empty", "occupied"
 
+#[fmt:skip]
 directions =
   (-1, -1), (0, -1), (1, -1),
   (-1,  0),          (1,  0),

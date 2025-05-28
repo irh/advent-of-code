@@ -28,7 +28,8 @@ parse_program = |input|
         "mask" then
           # e.g. mask = 0110xx10...
           words.next() # =
-          mask = words.next().get()
+          mask = words.next()
+            .get()
             .chars()
             .each |c|
               match c

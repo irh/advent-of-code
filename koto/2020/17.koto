@@ -28,9 +28,11 @@ local_4d = generate_local_4d().to_tuple()
 element_wise_sum = |a, b| a.zip(b).each(|(x, y)| x + y).to_tuple()
 
 parse_grid = |input|
-  result = input.lines().enumerate()
+  result = input.lines()
+    .enumerate()
     .each |(y, line)|
-      line.chars().enumerate()
+      line.chars()
+        .enumerate()
         .keep |(_, c)| c == '#'
         .each |(x, c)| (x, y, 0, 0)
     .flatten()
@@ -57,7 +59,6 @@ cycle_grid = |grid, local_positions|
         2 if grid.contains(position) then true
         else false
     .to_set()
-
 
 cycle_grid_3d = |grid|
   for _ in 0..6

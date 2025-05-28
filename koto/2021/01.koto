@@ -30,7 +30,6 @@ count_windowed_increases = |data|
     print "Part one: {count_increases report}" # 1754
     print "Part two: {count_windowed_increases report}" # 1789
 
-
 export
   @pre_test: ||
     self.report = parse_input "\

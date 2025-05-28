@@ -59,7 +59,7 @@ heap_meta =
 export make_heap = |values: Iterable = (), compare_fn = |a, b| a < b|
   heap = {
     data: values.to_list(),
-    compare_fn
+    compare_fn,
   }.with_meta heap_meta
 
   if not heap.data.is_empty()

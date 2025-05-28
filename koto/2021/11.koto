@@ -3,7 +3,11 @@
 from '../helpers' import run_day
 
 make_grid = |input|
-  grid_width = input.lines().next().get().chars().count()
+  grid_width = input.lines()
+    .next()
+    .get()
+    .chars()
+    .count()
 
   yield_numbers = ||
     for line in input.lines()

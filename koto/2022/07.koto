@@ -60,8 +60,8 @@ export
   @pre_test: ||
     self.fs =
       io.extend_path koto.script_dir(), 'input', '07-test'
-        -> io.read_to_string
-        -> make_fs
+      -> io.read_to_string
+      -> make_fs
 
   @test part_one: ||
     assert_eq (part_one self.fs), 95437

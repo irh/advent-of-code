@@ -42,6 +42,6 @@ export
   @test part_one: ||
     assert_eq (play_game (0, 3, 6), 2020), 436
 
-  # This takes a while to run (~30s)
-  # @test part_two: ||
-  #   assert_eq (play_game (0, 3, 6), 30000000), 175594
+# This takes a while to run (~30s)
+# @test part_two: ||
+#   assert_eq (play_game (0, 3, 6), 30000000), 175594

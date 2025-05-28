@@ -11,13 +11,15 @@ parse_entries = |input: String| -> Tuple
     .each |line|
       parts = line.split "|"
       patterns = {}
-      parts.next().get()
+      parts.next()
+        .get()
         .split " "
         .keep |s| not s.is_empty()
         .consume |pattern|
           pattern_chars = pattern.chars().to_set()
           patterns.update (size pattern_chars), [], |entry| entry.push pattern_chars
-      outputs = parts.next().get()
+      outputs = parts.next()
+        .get()
         .split(" ")
         .keep(|s| not s.is_empty())
         .each |pattern| pattern.chars().to_set()

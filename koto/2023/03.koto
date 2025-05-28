@@ -42,7 +42,7 @@ schematic_meta =
   @type: 'Schematic'
   @display: || '\nSchematic:\n  - symbols: ${self.symbols}\n  - numbers: ${self.numbers}'
   @meta gears: ||
-    self.symbols.keep |(_, symbol)| 
+    self.symbols.keep |(_, symbol)|
       symbol.symbol == '*' and (size symbol.parts) == 2
 
 make_schematic = |input| -> Schematic
@@ -69,7 +69,7 @@ make_schematic = |input| -> Schematic
         # The character is the start of a part number, consume it and any following numbers
         part = parse_part_number chars, y
         symbol_found = false
-        for adjacent_position in part.adjacent_positions() 
+        for adjacent_position in part.adjacent_positions()
           if symbol = symbols.get adjacent_position
             symbol.parts.push part
             symbol_found = true
@@ -90,9 +90,9 @@ adjacent_numbers = |pos, number_positions| -> Number
 
 part_one = |schematic| -> Number
   schematic
-     .parts
-     .each |part| part.number
-     .sum()
+    .parts
+    .each |part| part.number
+    .sum()
 
 part_two = |schematic| -> Number
   schematic

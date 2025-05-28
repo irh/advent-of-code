@@ -3,9 +3,14 @@
 from '../helpers' import run_day
 
 make_polymer = |input|
-  template = input.lines().next().get().chars().to_tuple()
+  template = input.lines()
+    .next()
+    .get()
+    .chars()
+    .to_tuple()
 
-  instructions = input.lines().skip(2)
+  instructions = input.lines()
+    .skip(2)
     .each |line|
       # e.g. 'CB -> H'
       tokens = line.split " -> "
@@ -55,7 +60,7 @@ step_polymer = |polymer, n|
 
 export
   @pre_test: ||
-    self.polymer= make_polymer "\
+    self.polymer = make_polymer "\
 NNCB
 
 CH -> B

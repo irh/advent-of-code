@@ -43,12 +43,12 @@ make_board = |lines|
   # Returns the board's score,
   # found by multiplying the last drawn number by the sum of the board's unmarked cells
   score: |last_number|
-    unmarked_sum = self.grid.zip(self.marked)
+    unmarked_sum = self.grid
+      .zip(self.marked)
       .keep |(_, marked)| not marked
       .each |(n, _)| n
       .sum()
     last_number * unmarked_sum
-
 
 parse_input = |input|
   lines = input.lines()
@@ -56,7 +56,8 @@ parse_input = |input|
   # Parse the draw order
   # e.g. 3,8,27,17,9...
   draw_order =
-    lines.next().get()
+    lines.next()
+      .get()
       .split ','
       .each to_number
       .to_tuple()

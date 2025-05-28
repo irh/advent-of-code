@@ -31,7 +31,6 @@ make_simulation = |input|
     print "Part one: {simulation.run 80}" # 351092
     print "Part two: {simulation.run 256}" # 1595330616005
 
-
 export
   @pre_test: ||
     self.simulation = make_simulation "3,4,3,1,2"

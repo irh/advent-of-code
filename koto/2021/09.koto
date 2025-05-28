@@ -4,7 +4,11 @@ from iterator import repeat
 from '../helpers' import run_day
 
 make_map = |input|
-  map_width = input.lines().next().get().chars().count()
+  map_width = input.lines()
+    .next()
+    .get()
+    .chars()
+    .count()
 
   yield_numbers = ||
     for line in input.lines()

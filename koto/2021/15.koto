@@ -4,7 +4,11 @@ from heap import make_heap
 from '../helpers' import make_set, run_day
 
 make_cave_map = |input|
-  grid_width = input.lines().next().get().chars().count()
+  grid_width = input.lines()
+    .next()
+    .get()
+    .chars()
+    .count()
 
   yield_numbers = ||
     for line in input.lines()
@@ -111,6 +115,7 @@ export
   @test expand_grid: ||
     cave_map = make_cave_map "8"
     cave_map.expand_grid()
+    #[fmt:skip]
     expected =
       8, 9, 1, 2, 3,
       9, 1, 2, 3, 4,

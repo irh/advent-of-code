@@ -109,4 +109,3 @@ export
 
   @test part_two: ||
     assert_eq (find_encryption_weakness self.input, 5), 62
-

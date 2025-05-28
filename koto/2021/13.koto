@@ -79,7 +79,6 @@ parse_input = |input|
 
     print "Part two: \n{paper}"
 
-
 export
   @pre_test: ||
     self.input = parse_input "\
