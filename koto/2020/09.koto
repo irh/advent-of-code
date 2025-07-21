@@ -105,7 +105,7 @@ export
     assert input_is_valid buffer, 66
 
   @test part_one_example_two: ||
-    assert_eq (find_first_invalid_input self.input, 5), 127
+    assert_eq find_first_invalid_input(self.input, 5), 127
 
   @test part_two: ||
-    assert_eq (find_encryption_weakness self.input, 5), 62
+    assert_eq find_encryption_weakness(self.input, 5), 62

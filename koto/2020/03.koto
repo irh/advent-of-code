@@ -56,7 +56,7 @@ export
     assert not self.input[4][2]
 
   @test part_one: ||
-    assert_eq (count_trees_on_grid self.input, (3, 1)), 7
+    assert_eq count_trees_on_grid(self.input, (3, 1)), 7
 
   @test part_two: ||
-    assert_eq (check_slopes_and_multiply_tree_counts self.input), 336
+    assert_eq check_slopes_and_multiply_tree_counts(self.input), 336

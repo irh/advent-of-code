@@ -43,7 +43,7 @@ parse_mappings = |mappings: Iterator| -> Tuple
       make_mapping destination.to_number(), source.to_number(), length.to_number()
     .to_tuple()
 
-apply_mapping = |mappings: Tuple, n: Number| -> Number
+apply_mapping = |n: Number, mappings: Tuple| -> Number
   match mappings.find(|mapping| mapping.contains n)
     mapping: Mapping then mapping.map n
     else n
@@ -52,7 +52,7 @@ apply_mapping = |mappings: Tuple, n: Number| -> Number
 # Only the portions of a range that overlap with a mapping region need to be mapped.
 # The remaining portions of input ranges also get passed through the mapping.
 # So there is a forking in the ranges: a single input range can branch into several others.
-apply_mapping_range = |mappings: Tuple, ranges: Iterable| -> Range
+apply_mapping_range = |ranges: Iterable, mappings: Tuple| -> Range
   for r in ranges
     match mappings.find(|mapping| mapping.intersects r)
       mapping: Mapping then
@@ -65,11 +65,11 @@ apply_mapping_range = |mappings: Tuple, ranges: Iterable| -> Range
         before = r.start().min(i.start())..i.start()
         after = i.end()..(r.end().max(i.end()))
         if (size before) > 0
-          for mapped in apply_mapping_range mappings, once(before)
+          for mapped in apply_mapping_range once(before), mappings 
             yield mapped
         yield mapping.map_range i
         if (size after) > 0
-          for mapped in apply_mapping_range mappings, once(after)
+          for mapped in apply_mapping_range once(after),  mappings
             yield mapped
       else yield r
 
@@ -77,7 +77,7 @@ almanac_meta =
   @type: 'Almanac'
 
   @meta seed_to_location: |seed: Number| -> Number
-    apply_mapping self.seed_to_soil, seed
+    apply_mapping seed, self.seed_to_soil
       -> apply_mapping self.soil_to_fertilizer
       -> apply_mapping self.fertilizer_to_water
       -> apply_mapping self.water_to_light
@@ -86,7 +86,7 @@ almanac_meta =
       -> apply_mapping self.humidity_to_location
 
   @meta seed_ranges_to_location_ranges: |seed_range: Range| -> Iterator
-    apply_mapping_range self.seed_to_soil, once(seed_range)
+    apply_mapping_range once(seed_range), self.seed_to_soil
       -> apply_mapping_range self.soil_to_fertilizer
       -> apply_mapping_range self.fertilizer_to_water
       -> apply_mapping_range self.water_to_light

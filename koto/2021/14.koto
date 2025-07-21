@@ -91,7 +91,7 @@ CN -> C"
     assert_eq polymer.element_counts(), {N: 2, B: 6, C: 4, H: 1}
 
   @test part_one: ||
-    assert_eq (step_polymer self.polymer, 10), 1588
+    assert_eq step_polymer(self.polymer, 10), 1588
 
   @test part_two: ||
-    assert_eq (step_polymer self.polymer, 40), 2188189693529
+    assert_eq step_polymer(self.polymer, 40), 2188189693529

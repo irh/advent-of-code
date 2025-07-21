@@ -110,7 +110,7 @@ export
       extend_path script_dir(), "input", "16-example-1"
       -> read_to_string
       -> parse_notes
-    assert_eq (scanning_error_rate fields, nearby_tickets), 71
+    assert_eq scanning_error_rate(fields, nearby_tickets), 71
 
   @test part_two: ||
     fields, your_ticket, nearby_tickets =

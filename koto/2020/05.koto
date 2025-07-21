@@ -23,7 +23,9 @@ find_missing_seat = |sorted_seat_ids|
       return b - 1
 
 @main = ||
-  seat_ids = io.read_to_string(io.extend_path koto.script_dir(), "input", "05")
+  input = io.extend_path koto.script_dir(), "input", "05"
+    -> io.read_to_string
+  seat_ids = input
     .lines()
     .each |seat_code| seat_id seat_code
     .to_list()

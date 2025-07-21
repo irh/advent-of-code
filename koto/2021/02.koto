@@ -60,7 +60,7 @@ forward 2
 "
 
   @test part_one: ||
-    assert_eq (follow_commands_part_one self.commands), (vec2 15, 10)
+    assert_eq follow_commands_part_one(self.commands), vec2(15, 10)
 
   @test part_two: ||
-    assert_eq (follow_commands_part_two self.commands), (vec2 15, 60)
+    assert_eq follow_commands_part_two(self.commands), vec2(15, 60)

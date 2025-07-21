@@ -50,7 +50,7 @@ parse_program = |input|
           commands.mem, index, value
     .to_tuple()
 
-apply_mask_to_value = |value, mask|
+apply_mask_to_value = |mask, value|
   value_bits = int_to_bits value, 36
   bits_to_int value_bits
     .zip(mask)
@@ -89,9 +89,7 @@ run_program = |program, version|
         index, value = value_1, value_2
         match version
           1 then
-            mask
-              -> apply_mask_to_value value
-              -> memory.insert index
+            memory.insert index, apply_mask_to_value(mask, value)
           2 then
             for decoded_index in index_decoder index, mask
               memory.insert decoded_index, value
@@ -115,7 +113,7 @@ mem[8] = 11
 mem[7] = 101
 mem[8] = 0
 "
-    assert_eq (run_program program, 1), 165
+    assert_eq run_program(program, 1), 165
 
   @test part_two: ||
     program = parse_program "\
@@ -124,4 +122,4 @@ mem[42] = 100
 mask = 00000000000000000000000000000000X0XX
 mem[26] = 1
 "
-    assert_eq (run_program program, 2), 208
+    assert_eq run_program(program, 2), 208
